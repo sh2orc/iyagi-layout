@@ -12,14 +12,14 @@
 
 IYAGI は韓国語の **이야기**(*iyagi*、「物語」)と読み、その中に **AGI** が隠れています。ひとつの名前、
 ひとつの役割 — 人と AGI のあいだに使えるインターフェースを置くこと。IYAGI Layout は
-[IYAGI Terminal](../iyagi-term) の小さな兄弟です。複数のターミナルで AI エージェントと話しているあいだ、
+[IYAGI Terminal](https://github.com/sh2orc/iyagi-term) の小さな兄弟です。複数のターミナルで AI エージェントと話しているあいだ、
 その周りのウインドウをきちんと整えます。
 
 ```text
 IYAGI
 Your Interface to AGI
 
-IYAGI Terminal     → AI コーディング / エージェントエンジニアリング   (../iyagi-term)
+IYAGI Terminal     → AI コーディング / エージェントエンジニアリング
 IYAGI Layout       → デスクトップのウインドウ配置                    (このリポジトリ)
 ```
 
@@ -35,9 +35,16 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 
 ## ダウンロード
 
+<p align="center">
+  <a href="https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg">
+    <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon)をダウンロード">
+  </a>
+</p>
+
+
 | プラットフォーム | ファイル | サイズ | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
 
 <details>
 <summary>macOS の署名と信頼性</summary>
@@ -164,6 +171,7 @@ scripts/              ローカル署名 runner、アイコン生成、Icon Comp
 ## 開発
 
 ```sh
+git clone https://github.com/sh2orc/iyagi-layout.git && cd iyagi-layout
 npm ci
 npm run typecheck && npm run test:unit      # TypeScript + vitest
 cargo fmt --all --check

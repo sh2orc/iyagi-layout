@@ -12,14 +12,14 @@
 
 IYAGI is *iyagi* — 이야기, the Korean word for "story" — with **AGI** hiding in plain sight. One
 name, one job: a workable interface between people and AGI. IYAGI Layout is a small sibling of
-[IYAGI Terminal](../iyagi-term): while you talk to AI agents in several terminals, it keeps the
+[IYAGI Terminal](https://github.com/sh2orc/iyagi-term): while you talk to AI agents in several terminals, it keeps the
 windows around them in order.
 
 ```text
 IYAGI
 Your Interface to AGI
 
-IYAGI Terminal     → AI Coding / Agentic Engineering   (../iyagi-term)
+IYAGI Terminal     → AI Coding / Agentic Engineering
 IYAGI Layout       → Window layout for the desktop      (this repository)
 ```
 
@@ -35,9 +35,16 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
 ## Download
 
+<p align="center">
+  <a href="https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg">
+    <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download IYAGI Layout for macOS (Apple Silicon)">
+  </a>
+</p>
+
+
 | Platform | File | Size | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
 
 <details>
 <summary>Signing & trust on macOS</summary>
@@ -166,6 +173,7 @@ macOS, Tauri or React, so its tests run on any OS. Every `unsafe` FFI call stays
 ## Development
 
 ```sh
+git clone https://github.com/sh2orc/iyagi-layout.git && cd iyagi-layout
 npm ci
 npm run typecheck && npm run test:unit      # TypeScript + vitest
 cargo fmt --all --check

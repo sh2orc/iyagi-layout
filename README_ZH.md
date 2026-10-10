@@ -11,14 +11,14 @@
 ## 品牌
 
 IYAGI 读作韩语的 **이야기**(*iyagi*，意为"故事")，**AGI** 就藏在其中。一个名字，一项使命 —— 在人与 AGI
-之间搭起一个好用的界面。IYAGI Layout 是 [IYAGI Terminal](../iyagi-term) 的小兄弟：当你在多个终端里与 AI
+之间搭起一个好用的界面。IYAGI Layout 是 [IYAGI Terminal](https://github.com/sh2orc/iyagi-term) 的小兄弟：当你在多个终端里与 AI
 智能体对话时，它负责把周围的窗口整理好。
 
 ```text
 IYAGI
 Your Interface to AGI
 
-IYAGI Terminal     → AI 编程 / 智能体工程      (../iyagi-term)
+IYAGI Terminal     → AI 编程 / 智能体工程   
 IYAGI Layout       → 桌面窗口布局              (本仓库)
 ```
 
@@ -32,9 +32,16 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 
 ## 下载
 
+<p align="center">
+  <a href="https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg">
+    <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="下载适用于 macOS(Apple Silicon)的 IYAGI Layout">
+  </a>
+</p>
+
+
 | 平台 | 文件 | 大小 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
 
 <details>
 <summary>macOS 签名与信任</summary>
@@ -150,6 +157,7 @@ scripts/              本地签名 runner、图标生成、Icon Composer 资源�
 ## 开发
 
 ```sh
+git clone https://github.com/sh2orc/iyagi-layout.git && cd iyagi-layout
 npm ci
 npm run typecheck && npm run test:unit      # TypeScript + vitest
 cargo fmt --all --check
