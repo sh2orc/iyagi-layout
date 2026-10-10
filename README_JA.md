@@ -33,6 +33,14 @@ IYAGI Layout は macOS のメニューバー常駐ユーティリティです。
 Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプリで、ウインドウの計算は純粋な Rust
 クレート、macOS の呼び出しはすべて小さな型付きラッパーの内側にあります。
 
+<p align="center">
+  <a href="docs/media/iyagi-layout-intro.mp4">
+    <img src="docs/media/iyagi-layout-intro.webp" alt="30 秒でわかる IYAGI Layout: ショートカット1つでどのウインドウも画面の半分に、もう一度矢印キーで再分割、ログイン時に起動するメニューバーアプリ" width="800">
+  </a>
+  <br>
+  <sub>30 秒の紹介動画(英語) · <a href="docs/media/iyagi-layout-intro.mp4">MP4, 1080p</a></sub>
+</p>
+
 ## ダウンロード
 
 <p align="center">
@@ -209,6 +217,7 @@ PNG/ICNS 一式を作り、`scripts/build-icon-assets.sh` が Icon Composer ア�
 |---|---|
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)(韓国語) | 決定事項、macOS の仕組みと検証結果、動作仕様、チケット、リスク |
 | [releases/README.md](releases/README.md) | リリースバイナリ、署名と公証の手順 |
+| [docs/media/intro/](docs/media/intro/) | 30 秒紹介動画のソース(`intro.html` + `render.mjs`、再生成: `node docs/media/intro/render.mjs`) |
 
 ## ステータスとロードマップ
 

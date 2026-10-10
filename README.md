@@ -33,6 +33,14 @@ It lives in the menu bar, keeps running when you close its window, and starts at
 on Tauri 2 + Rust with the same signing and release flow as IYAGI Terminal. The window math is a
 pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
+<p align="center">
+  <a href="docs/media/iyagi-layout-intro.mp4">
+    <img src="docs/media/iyagi-layout-intro.webp" alt="IYAGI Layout in 30 seconds: one shortcut snaps any window to half the screen, a second arrow splits it again, menu-bar app that starts at login" width="800">
+  </a>
+  <br>
+  <sub>30-second intro (English) · <a href="docs/media/iyagi-layout-intro.mp4">MP4, 1080p</a></sub>
+</p>
+
 ## Download
 
 <p align="center">
@@ -211,6 +219,7 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 |---|---|
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) (Korean) | Decisions, macOS mechanisms and findings, behavior spec, tickets, risks |
 | [releases/README.md](releases/README.md) | Release binaries, signing and notarization steps |
+| [docs/media/intro/](docs/media/intro/) | Source of the 30-second intro (`intro.html` + `render.mjs`; re-render with `node docs/media/intro/render.mjs`) |
 
 ## Status & Roadmap
 

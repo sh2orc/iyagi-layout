@@ -32,6 +32,14 @@ IYAGI Layout은 macOS 메뉴 막대 유틸리티입니다. **⌥⌘ + 방향키*
 Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 계산은 순수 Rust crate이고, macOS
 호출은 모두 작고 타입이 있는 래퍼 뒤에 있습니다.
 
+<p align="center">
+  <a href="docs/media/iyagi-layout-intro.mp4">
+    <img src="docs/media/iyagi-layout-intro.webp" alt="30초로 보는 IYAGI Layout: 단축키 하나로 어느 창이든 화면 절반에, 방향키를 한 번 더 누르면 다시 분할, 로그인 시 시작하는 메뉴 막대 앱" width="800">
+  </a>
+  <br>
+  <sub>30초 소개 영상(영어) · <a href="docs/media/iyagi-layout-intro.mp4">MP4, 1080p</a></sub>
+</p>
+
 ## 다운로드
 
 <p align="center">
@@ -206,6 +214,7 @@ PNG/ICNS 세트를 만들고 `scripts/build-icon-assets.sh`가 Icon Composer 에
 |---|---|
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | 결정 사항, macOS 메커니즘과 검증 결과, 동작 명세, 티켓, 위험 |
 | [releases/README.md](releases/README.md) | 릴리스 바이너리, 서명·공증 절차 |
+| [docs/media/intro/](docs/media/intro/) | 30초 소개 영상 소스(`intro.html` + `render.mjs`, 다시 만들기: `node docs/media/intro/render.mjs`) |
 
 ## 상태와 로드맵
 

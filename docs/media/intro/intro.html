@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IYAGI Layout — 30-second intro</title>
+<!--
+  30초 소개 모션 그래픽. 모든 장면은 시간 t(초)의 순수 함수다: window.__render(t)가 DOM을 그 시각의
+  모습으로 만든다. render.mjs가 t를 1/30초씩 올리며 캡처해 ffmpeg로 인코딩한다.
+  동작 설명은 실제 앱 동작과 같아야 한다(IMPLEMENTATION_PLAN.md §6): 같은 축의 방향키는 화면 절반,
+  3초 안에 다른 축의 키를 누르면 현재 창을 다시 나눈다.
+-->
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:#040a22;
+    font-family:-apple-system,"SF Pro Display","Helvetica Neue","Apple SD Gothic Neo","Hiragino Sans","PingFang SC",sans-serif;color:#fff}
+  #stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;
+    background:radial-gradient(1400px 900px at 70% 10%,#0b3fd1 0%,#071a66 45%,#040a22 100%)}
+  .abs{position:absolute;left:0;top:0;will-change:transform,opacity}
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
+  .center{text-align:center;transform-origin:50% 50%}
+  .glass{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);backdrop-filter:blur(20px)}
+
+  /* brand badge */
+  #brand{left:64px;top:34px;display:flex;align-items:center;gap:14px;font-weight:700;font-size:30px;letter-spacing:.2px}
+  #brand img{width:52px;height:52px;border-radius:22.4%}
+
+  /* captions */
+  .cap{left:0;width:1920px;top:52px;text-align:center;font-size:56px;font-weight:750;letter-spacing:-.5px;
+    text-shadow:0 4px 30px rgba(0,20,120,.7)}
+  .cap b{color:#5ff0ff;font-weight:800}
+
+  /* screen */
+  #screen{left:320px;top:150px;width:1280px;height:720px;border-radius:24px;overflow:hidden;
+    background:linear-gradient(135deg,#102f8f 0%,#0a1c63 55%,#0b2a7c 100%);
+    border:2px solid rgba(255,255,255,.2);box-shadow:0 40px 120px rgba(0,10,80,.75), inset 0 0 120px rgba(34,227,255,.08)}
+  #menubar{position:absolute;left:0;top:0;width:1280px;height:28px;background:rgba(255,255,255,.12);display:flex;
+    align-items:center;justify-content:space-between;padding:0 14px;font-size:14px;font-weight:600;color:rgba(255,255,255,.85)}
+  .tray{display:inline-block;width:22px;height:15px;border:2px solid #fff;border-radius:4px;position:relative}
+  .tray:after{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:#fff}
+
+  /* windows */
+  .win{position:absolute;border-radius:12px;overflow:hidden;will-change:left,top,width,height,transform,opacity;
+    box-shadow:0 18px 50px rgba(0,5,50,.55)}
+  .win .tb{height:30px;display:flex;align-items:center;gap:7px;padding-left:12px;background:rgba(0,0,40,.28)}
+  .win .tb i{width:11px;height:11px;border-radius:50%;background:#ff5f57}
+  .win .tb i:nth-child(2){background:#febc2e}.win .tb i:nth-child(3){background:#28c840}
+  .win .bd{position:absolute;left:0;right:0;top:30px;bottom:0;padding:14px;overflow:hidden}
+  .win .thumb{height:38%;border-radius:10px;background:rgba(255,255,255,.28);margin-bottom:14px;position:relative;overflow:hidden}
+  .win .thumb:before{content:"";position:absolute;left:12%;top:18%;width:16%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.7)}
+  .win .thumb:after{content:"";position:absolute;left:30%;right:-6%;bottom:-30%;height:80%;background:rgba(255,255,255,.45);
+    transform:rotate(45deg) scale(.7)}
+  .win .bar{height:13px;border-radius:7px;margin-bottom:11px;background:rgba(255,255,255,.55)}
+  .wa{background:linear-gradient(160deg,#1668ff,#0b3fd1)} .wb{background:linear-gradient(160deg,#dff9ff,#9fe9ff)}
+  .wb .bar{background:rgba(10,91,255,.35)} .wb .thumb{background:rgba(10,91,255,.22)}
+  .wc{background:linear-gradient(160deg,#16f0cf,#0aa5c9)} .wd{background:linear-gradient(160deg,#3f55ff,#7a5cff)}
+
+  /* keycaps */
+  #keys{left:0;width:1920px;top:905px;height:120px}
+  .cap-key{position:absolute;top:0;height:112px;border-radius:22px;display:flex;align-items:center;justify-content:center;
+    font-size:60px;font-weight:700;color:#0a1a55;
+    background:linear-gradient(180deg,#ffffff,#cfe4ff);box-shadow:0 10px 0 #7aa6f0,0 24px 40px rgba(0,10,80,.5)}
+  .plus{position:absolute;top:20px;font-size:54px;font-weight:600;color:rgba(255,255,255,.7)}
+  #ring{left:0;top:0}
+
+  /* ghost region preview */
+  #ghost{position:absolute;border:3px dashed #5ff0ff;background:rgba(34,227,255,.16);border-radius:10px}
+
+  /* menu dropdown + settings (scene 4) */
+  #menustrip{position:absolute;left:320px;top:150px;width:1280px;height:46px;border-radius:18px 18px 0 0;background:rgba(255,255,255,.14);
+    display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:20px;font-weight:600;color:rgba(255,255,255,.88)}
+  #drop{position:absolute;left:0;top:0;width:410px;border-radius:18px;padding:12px 0;transform-origin:100% 0;
+    background:rgba(18,32,92,.92);border:1.5px solid rgba(255,255,255,.22);box-shadow:0 30px 80px rgba(0,5,50,.7)}
+  #drop .it{height:46px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;font-size:22px;font-weight:550}
+  #drop .it.dim{color:rgba(255,255,255,.55);font-size:19px}
+  #drop .sep{height:1.5px;margin:8px 16px;background:rgba(255,255,255,.18)}
+  #settings{position:absolute;left:0;top:0;width:800px;height:664px;border-radius:22px;padding:24px 32px;background:#0d1b57;
+    border:1.5px solid rgba(255,255,255,.22);box-shadow:0 40px 100px rgba(0,5,50,.75)}
+  #settings h3{font-size:28px;margin-bottom:2px} #settings .sub{font-size:18px;color:rgba(255,255,255,.65);margin-bottom:14px}
+  .sec{border-radius:14px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);padding:10px 20px;margin-bottom:12px}
+  .sec h4{font-size:15px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:8px}
+  .row{display:flex;align-items:center;justify-content:space-between;height:40px;font-size:20px}
+  .pill{min-width:150px;height:34px;border-radius:9px;background:rgba(255,255,255,.14);display:flex;align-items:center;
+    justify-content:center;font-size:21px;font-weight:600}
+  .pill.rec{background:rgba(34,227,255,.22);outline:2px solid #5ff0ff;color:#5ff0ff}
+  .toggle{width:64px;height:36px;border-radius:18px;background:rgba(255,255,255,.22);position:relative}
+  .toggle i{position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:50%;background:#fff}
+  .slider{width:300px;height:8px;border-radius:4px;background:rgba(255,255,255,.2);position:relative}
+  .slider i{position:absolute;top:-8px;width:24px;height:24px;border-radius:50%;background:#fff}
+  .dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:#28e08a;margin-right:10px;box-shadow:0 0 14px #28e08a}
+
+  /* principles */
+  .card{width:620px;height:190px;border-radius:26px;padding:34px 40px}
+  .card h5{font-size:40px;font-weight:780;margin-bottom:10px;letter-spacing:-.3px}
+  .card p{font-size:26px;color:rgba(255,255,255,.72);line-height:1.35}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, x) => a + (b - a) * x;
+const eo = (x) => 1 - Math.pow(1 - x, 3);
+const eio = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const eb = (x) => { const c1 = 1.25, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const EASE = { io: eio, o: eo, b: eb, l: (x) => x };
+/** 사다리꼴 가시성: a→b 나타남, c→d 사라짐. */
+const vis = (t, a, b, c, d) => Math.min(prog(t, a, b), 1 - prog(t, c, d));
+
+function h(tag, cls, parent, html, style) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html != null) e.innerHTML = html;
+  if (style) Object.assign(e.style, style);
+  (parent || stage).appendChild(e);
+  return e;
+}
+const stage = $("stage");
+const put = (el, o, x = 0, y = 0, s = 1, rot = 0) => {
+  el.style.opacity = o;
+  el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s})`;
+};
+
+// ---------------------------------------------------------------- background
+const blobs = [
+  h("div", "blob", null, null, { left: "-200px", top: "500px", width: "800px", height: "800px", background: "#0a5bff" }),
+  h("div", "blob", null, null, { left: "1300px", top: "-200px", width: "700px", height: "700px", background: "#12e6c4", opacity: ".35" }),
+  h("div", "blob", null, null, { left: "700px", top: "700px", width: "700px", height: "500px", background: "#3f55ff", opacity: ".4" }),
+];
+
+// ---------------------------------------------------------------- brand + captions
+const brand = h("div", "abs", null, '<img src="../../../iyagi-layout.png"><span>IYAGI Layout</span>');
+brand.id = "brand";
+const CAPTIONS = [
+  [3.9, 5.4, "Too many windows."],
+  [5.4, 7.0, "Not enough <b>screen</b>."],
+  [7.2, 10.1, "One <b>shortcut</b>. Any app."],
+  [10.2, 12.0, "Left · Right · Top · Bottom"],
+  [12.2, 14.3, "Press another arrow within <b>3 seconds</b>…"],
+  [14.4, 17.2, "…and split again. <b>Four windows</b>, tiled."],
+  [17.6, 19.8, "Lives in your <b>menu bar</b>."],
+  [19.8, 21.8, "Starts at login. <b>Your</b> shortcuts."],
+].map(([a, b, html]) => ({ a, b, el: h("div", "abs cap", null, html) }));
+
+// ---------------------------------------------------------------- scene 0 / 6 (logo)
+const logoWrap = h("div", "abs", null, null, { width: "1920px", height: "1080px" });
+const icon = h("img", "abs", logoWrap, null, { left: "780px", top: "170px", width: "360px", height: "360px", borderRadius: "22.4%",
+  boxShadow: "0 0 120px rgba(34,227,255,.55), 0 40px 100px rgba(0,10,80,.7)" });
+icon.src = "../../../iyagi-layout.png";
+const TITLE = "IYAGI Layout";
+const titleBox = h("div", "abs center", logoWrap, null, { left: "0", top: "570px", width: "1920px", fontSize: "128px", fontWeight: "820", letterSpacing: "-2px" });
+const letters = [...TITLE].map((c) => h("span", null, titleBox, c === " " ? "&nbsp;" : c, { display: "inline-block" }));
+const sub0 = h("div", "abs center", logoWrap, "Press a shortcut. Get a half screen.", { left: "0", top: "745px", width: "1920px", fontSize: "50px", fontWeight: "560", color: "#bfe9ff" });
+const tag0 = h("div", "abs center", logoWrap, "YOUR INTERFACE TO AGI", { left: "0", top: "850px", width: "1920px", fontSize: "26px", fontWeight: "650", letterSpacing: "9px", color: "rgba(255,255,255,.55)" });
+
+// ---------------------------------------------------------------- screen + windows
+const screen = h("div", "abs", null, null);
+screen.id = "screen";
+const mb = h("div", null, screen, '<span>&nbsp;&nbsp;Finder&nbsp;&nbsp;&nbsp;File&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;View</span><span style="display:flex;gap:16px;align-items:center"><span class="tray"></span><span>9:41</span></span>');
+mb.id = "menubar";
+const ghost = h("div", null, screen);
+ghost.id = "ghost";
+const mkWin = (cls) => h("div", "win " + cls, screen, '<div class="tb"><i></i><i></i><i></i></div><div class="bd"><div class="thumb"></div><div class="bar" style="width:92%"></div><div class="bar" style="width:68%"></div><div class="bar" style="width:80%"></div></div>');
+const W = { a: mkWin("wa"), b: mkWin("wb"), c: mkWin("wc"), d: mkWin("wd") };
+const R = {
+  L: [3, 31, 634, 686], Rt: [643, 31, 634, 686],
+  TL: [3, 31, 634, 340], TR: [643, 31, 634, 340], BL: [3, 377, 634, 340], BR: [643, 377, 634, 340],
+};
+// [t, x, y, w, h, opacity, rot, scale, ease]
+const K = {
+  a: [
+    [3.7, 120, 110, 520, 340, 0, -4, .85, "b"], [4.5, 120, 110, 520, 340, 1, -4, 1, "b"],
+    [6.6, 120, 110, 520, 340, 1, -4, 1, "io"], [7.4, 330, 174, 620, 400, 1, 0, 1, "io"],
+    [8.0, 330, 174, 620, 400, 1, 0, 1], [8.38, ...R.L, 1, 0, 1, "b"],
+    [9.1, ...R.L, 1, 0, 1], [9.48, ...R.Rt, 1, 0, 1, "b"],
+    [12.6, ...R.Rt, 1, 0, 1], [12.98, ...R.L, 1, 0, 1, "b"],
+    [14.0, ...R.L, 1, 0, 1], [14.38, ...R.BL, 1, 0, 1, "b"],
+  ],
+  b: [
+    [3.9, 520, 80, 500, 330, 0, 3, .85, "b"], [4.7, 520, 80, 500, 330, 1, 3, 1, "b"],
+    [6.6, 520, 80, 500, 330, 1, 3, 1, "io"], [7.2, 560, 120, 500, 330, 0, 3, .9, "io"],
+    [14.6, 1290, 31, 634, 340, 0, 0, 1, "io"], [15.0, ...R.TR, 1, 0, 1, "b"],
+  ],
+  c: [
+    [4.1, 300, 300, 560, 330, 0, -2, .85, "b"], [4.9, 300, 300, 560, 330, 1, -2, 1, "b"],
+    [6.6, 300, 300, 560, 330, 1, -2, 1, "io"], [7.2, 280, 330, 560, 330, 0, -2, .9, "io"],
+    [14.9, -650, 31, 634, 340, 0, 0, 1, "io"], [15.4, ...R.TL, 1, 0, 1, "b"],
+  ],
+  d: [
+    [4.3, 760, 250, 460, 320, 0, 5, .85, "b"], [5.1, 760, 250, 460, 320, 1, 5, 1, "b"],
+    [6.6, 760, 250, 460, 320, 1, 5, 1, "io"], [7.2, 790, 280, 460, 320, 0, 5, .9, "io"],
+    [15.3, 643, 740, 634, 340, 0, 0, 1, "io"], [15.8, ...R.BR, 1, 0, 1, "b"],
+  ],
+};
+function track(keys, t) {
+  if (t <= keys[0][0]) return keys[0];
+  for (let i = 0; i < keys.length - 1; i++) {
+    const k0 = keys[i], k1 = keys[i + 1];
+    if (t >= k0[0] && t <= k1[0]) {
+      const e = EASE[k1[8] || "io"](prog(t, k0[0], k1[0]));
+      return k0.map((v, j) => (j === 0 || j === 8 ? v : lerp(v, k1[j], e)));
+    }
+  }
+  return keys[keys.length - 1];
+}
+function placeWins(t) {
+  for (const id of ["a", "b", "c", "d"]) {
+    const [, x, y, w, hh, o, rot, s] = track(K[id], t);
+    const el = W[id];
+    let yy = y;
+    if (t > 3.6 && t < 7.2) yy += Math.sin(t * 1.6 + id.charCodeAt(0)) * 5;
+    Object.assign(el.style, { left: x + "px", top: yy + "px", width: w + "px", height: hh + "px", opacity: o,
+      transform: `rotate(${rot}deg) scale(${s})` });
+  }
+  // 포커스 링: 키보드 시연 동안만 A에 둔다.
+  const f = vis(t, 7.3, 7.8, 17.0, 17.4);
+  W.a.style.boxShadow = f > 0 ? `0 0 0 ${3 * f}px rgba(95,240,255,${.95 * f}), 0 0 ${46 * f}px rgba(34,227,255,${.65 * f}), 0 18px 50px rgba(0,5,50,.55)` : "0 18px 50px rgba(0,5,50,.55)";
+}
+const GHOSTS = [
+  [10.3, 10.65, R.L], [10.65, 11.0, R.Rt], [11.0, 11.35, [3, 31, 1274, 340]], [11.35, 11.7, [3, 377, 1274, 340]],
+];
+
+// ---------------------------------------------------------------- keycaps + ring
+const keys = h("div", "abs", null, null);
+keys.id = "keys";
+const mkKey = (txt, x, w) => h("div", "cap-key", keys, txt, { left: x + "px", width: w + "px" });
+const kOpt = mkKey("⌥", 650, 150), kCmd = mkKey("⌘", 830, 150), kArr = mkKey("←", 1090, 150);
+h("div", "plus", keys, "+", { left: "1000px" }).style.left = "1013px";
+const PRESSES = [[8.0, "←"], [9.1, "→"], [10.3, "←"], [10.65, "→"], [11.0, "↑"], [11.35, "↓"], [12.6, "←"], [14.0, "↓"]];
+function pressAmt(t, tp) { return clamp(Math.min((t - (tp - 0.08)) / 0.08, 1 - (t - (tp + 0.18)) / 0.2)); }
+function placeKeys(t) {
+  const o = vis(t, 7.0, 7.5, 17.0, 17.4);
+  put(keys, o);
+  let glyph = "←", press = 0;
+  for (const [tp, g] of PRESSES) { if (t >= tp - 0.08) glyph = g; press = Math.max(press, pressAmt(t, tp)); }
+  kArr.textContent = glyph;
+  for (const [el, mod] of [[kOpt, 1], [kCmd, 1], [kArr, 0]]) {
+    const p = mod ? clamp(PRESSES.reduce((m, [tp]) => Math.max(m, t >= tp - .3 && t <= tp + .55 ? 1 : 0), 0)) : press;
+    el.style.transform = `translateY(${p * 7}px)`;
+    el.style.boxShadow = `0 ${10 - p * 7}px 0 #7aa6f0, 0 ${24 - p * 14}px 40px rgba(0,10,80,.5)`;
+    el.style.filter = p ? `brightness(${1 + p * .06}) drop-shadow(0 0 ${p * 18}px rgba(95,240,255,.9))` : "none";
+  }
+}
+const ring = h("div", "abs", null, '<svg width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="10"/><circle id="arc" cx="75" cy="75" r="62" fill="none" stroke="#5ff0ff" stroke-width="10" stroke-linecap="round" transform="rotate(-90 75 75)" stroke-dasharray="389.6" stroke-dashoffset="0"/></svg><div id="rn" style="position:absolute;left:0;top:44px;width:150px;text-align:center;font-size:56px;font-weight:800">3</div><div style="position:absolute;left:0;top:158px;width:150px;text-align:center;font-size:24px;font-weight:650;color:#bfe9ff">within 3 s</div>');
+ring.id = "ring";
+function placeRing(t) {
+  const start = 12.98, o = vis(t, 12.8, 13.1, 14.1, 14.5);
+  put(ring, o, 1370, 868, 1);
+  const elapsed = clamp((t - start) / 3, 0, 1);
+  $("arc").setAttribute("stroke-dashoffset", String(389.6 * elapsed));
+  $("rn").textContent = String(Math.max(1, Math.ceil(3 - elapsed * 3)));
+}
+
+// ---------------------------------------------------------------- scene 4 (menu bar + settings)
+const s4 = h("div", "abs", null, null, { width: "1920px", height: "1080px" });
+const strip = h("div", null, s4, '<span>Finder&nbsp;&nbsp; File&nbsp;&nbsp; Edit&nbsp;&nbsp; View</span><span style="display:flex;gap:22px;align-items:center;margin-right:30px"><span id="trayBtn" style="display:inline-flex;padding:5px 10px;border-radius:8px"><span class="tray"></span></span><span>Fri 9:41</span></span>');
+strip.id = "menustrip";
+const drop = h("div", null, s4,
+  '<div class="it dim" style="height:60px;line-height:1.3">⌥⌘← Left half · ⌥⌘→ Right half · …</div><div class="sep"></div>' +
+  '<div class="it"><span>Settings…</span><span style="opacity:.6">⌘,</span></div>' +
+  '<div class="it"><span>Open Accessibility Settings</span></div>' +
+  '<div class="it"><span><span id="chk" style="display:inline-block;width:30px">✓</span>Launch at Login</span></div>' +
+  '<div class="it"><span>Open Logs Folder</span></div><div class="sep"></div>' +
+  '<div class="it dim"><span>IYAGI Layout 0.1.0</span></div><div class="it"><span>Quit</span><span style="opacity:.6">⌘Q</span></div>');
+drop.id = "drop";
+const dropItems = [...drop.querySelectorAll(".it")];
+const settings = h("div", null, s4,
+  '<h3>IYAGI Layout</h3><div class="sub">Snap the current window to a half of the screen with a shortcut.</div>' +
+  '<div class="sec"><h4>Accessibility permission</h4><div class="row"><span><span class="dot"></span>Allowed</span></div></div>' +
+  '<div class="sec"><h4>Shortcuts</h4>' +
+  '<div class="row"><span>Left half</span><span class="pill" id="p1">⌥⌘←</span></div>' +
+  '<div class="row"><span>Right half</span><span class="pill">⌥⌘→</span></div>' +
+  '<div class="row"><span>Top half</span><span class="pill">⌥⌘↑</span></div>' +
+  '<div class="row"><span>Bottom half</span><span class="pill">⌥⌘↓</span></div></div>' +
+  '<div class="sec"><h4>Layout</h4><div class="row"><span>Gap (pt)</span><span style="display:flex;align-items:center;gap:20px"><span class="slider"><i id="knob"></i></span><b id="gapv" style="width:34px">0</b></span></div>' +
+  '<div class="row"><span>Launch at login</span><span class="toggle" id="tg"><i id="tgk"></i></span></div></div>');
+settings.id = "settings";
+function placeS4(t) {
+  const o = vis(t, 17.4, 17.9, 21.4, 21.9);
+  put(s4, o);
+  put(strip, 1);
+  const tray = $("trayBtn");
+  tray.style.background = `rgba(255,255,255,${.22 * prog(t, 17.8, 18.0) * (1 - prog(t, 21.2, 21.4))})`;
+  // dropdown
+  const dOpen = prog(t, 18.0, 18.35);
+  const dx = 1570 - 410, dy = 204;
+  drop.style.opacity = dOpen * (1 - prog(t, 21.2, 21.5));
+  drop.style.transform = `translate(${dx}px,${dy}px) scale(1,${lerp(.88, 1, eo(dOpen))})`;
+  dropItems.forEach((it, i) => { const a = prog(t, 18.15 + i * .07, 18.45 + i * .07); it.style.opacity = a; it.style.transform = `translateY(${(1 - eo(a)) * 8}px)`; });
+  const on = prog(t, 19.0, 19.25);
+  $("chk").style.opacity = on; $("chk").style.transform = `scale(${lerp(.4, 1, eb(on))})`; $("chk").style.color = "#5ff0ff";
+  // settings window
+  const sIn = eo(prog(t, 18.5, 19.1));
+  put(settings, sIn, 320, lerp(240, 214, sIn), lerp(.94, 1, sIn));
+  // shortcut recorder blink 19.9–20.5
+  const rec = t > 19.9 && t < 20.45;
+  const p1 = $("p1");
+  p1.className = "pill" + (rec ? " rec" : "");
+  p1.textContent = rec ? "Press keys…" : "⌥⌘←";
+  // gap slider 20.5–21.1 (0 → 8, max 32)
+  const g = Math.round(8 * eio(prog(t, 20.5, 21.1)));
+  $("gapv").textContent = String(g);
+  $("knob").style.left = (g / 32) * 276 + "px";
+  // login toggle flips 19.0
+  const tg = eio(prog(t, 19.0, 19.3));
+  $("tg").style.background = `rgba(${lerp(255, 40, tg)},${lerp(255, 224, tg)},${lerp(255, 138, tg)},${lerp(.22, 1, tg)})`;
+  $("tgk").style.left = lerp(4, 32, tg) + "px";
+}
+
+// ---------------------------------------------------------------- scene 5 (principles)
+const s5 = h("div", "abs", null, null, { width: "1920px", height: "1080px" });
+const head5 = h("div", "abs center", s5, "Quiet by <span style='color:#5ff0ff'>design</span>.", { left: "0", top: "130px", width: "1920px", fontSize: "92px", fontWeight: "820", letterSpacing: "-1.5px" });
+const CARDS = [
+  [300, 330, "No event tap", "Carbon hotkeys never slow your keyboard.", 22.4],
+  [1000, 330, "One permission", "Accessibility — and nothing else.", 22.8],
+  [300, 560, "No network. No telemetry.", "Everything stays on your Mac.", 23.2],
+  [1000, 560, "Speaks your language", "English · 한국어 · 日本語 · 中文", 23.6],
+].map(([x, y, t1, t2, at]) => ({ x, y, at, el: h("div", "abs card glass", s5, `<h5>${t1}</h5><p>${t2}</p>`) }));
+function placeS5(t) {
+  put(s5, vis(t, 21.7, 22.1, 25.2, 25.7));
+  put(head5, eo(prog(t, 22.0, 22.5)), 0, (1 - eo(prog(t, 22.0, 22.5))) * 30);
+  for (const c of CARDS) { const a = eb(prog(t, c.at, c.at + .5)); put(c.el, clamp(a), c.x, c.y + (1 - a) * 50, lerp(.92, 1, clamp(a))); }
+}
+
+// ---------------------------------------------------------------- scene 6 (outro)
+const s6 = h("div", "abs", null, null, { width: "1920px", height: "1080px" });
+const icon6 = h("img", "abs", s6, null, { left: "850px", top: "150px", width: "220px", height: "220px", borderRadius: "22.4%",
+  boxShadow: "0 0 100px rgba(34,227,255,.5), 0 30px 80px rgba(0,10,80,.7)" });
+icon6.src = "../../../iyagi-layout.png";
+const t6 = h("div", "abs center", s6, "IYAGI Layout", { left: "0", top: "420px", width: "1920px", fontSize: "120px", fontWeight: "830", letterSpacing: "-2px" });
+const l6 = h("div", "abs center", s6, "Open source · Apache-2.0 · macOS 13+", { left: "0", top: "590px", width: "1920px", fontSize: "40px", fontWeight: "560", color: "#bfe9ff" });
+const u6 = h("div", "abs center", s6, "github.com/sh2orc/iyagi-layout", { left: "0", top: "690px", width: "1920px", fontSize: "52px", fontWeight: "720", color: "#5ff0ff" });
+const g6 = h("div", "abs center", s6, "YOUR INTERFACE TO AGI", { left: "0", top: "850px", width: "1920px", fontSize: "26px", fontWeight: "650", letterSpacing: "9px", color: "rgba(255,255,255,.55)" });
+const fade = h("div", "abs", null, null, { width: "1920px", height: "1080px", background: "#000", opacity: 0, pointerEvents: "none" });
+
+// ---------------------------------------------------------------- master
+window.__render = function (t) {
+  blobs.forEach((b, i) => { b.style.transform = `translate(${Math.sin(t * .35 + i * 2) * 90}px,${Math.cos(t * .3 + i) * 70}px)`; });
+
+  // scene 0
+  const s0 = vis(t, 0, 0.01, 3.25, 3.75);
+  const pop = eb(prog(t, 0.15, 1.0));
+  put(logoWrap, s0, 0, -40 * prog(t, 3.25, 3.75));
+  put(icon, clamp(pop * 1.4), 0, 0, lerp(.5, 1, pop));
+  letters.forEach((l, i) => { const a = eo(prog(t, 1.0 + i * .05, 1.35 + i * .05)); l.style.opacity = a; l.style.transform = `translateY(${(1 - a) * 40}px)`; });
+  put(sub0, eo(prog(t, 1.9, 2.5)), 0, (1 - eo(prog(t, 1.9, 2.5))) * 24);
+  put(tag0, eo(prog(t, 2.6, 3.0)) * .9);
+
+  // brand + captions
+  put(brand, vis(t, 3.9, 4.3, 25.2, 25.6));
+  for (const c of CAPTIONS) {
+    const o = vis(t, c.a, c.a + .35, c.b - .3, c.b);
+    put(c.el, o, 0, (1 - prog(t, c.a, c.a + .35)) * 22 - prog(t, c.b - .3, c.b) * 12);
+  }
+
+  // screen scene (3.4–17.8)
+  const so = vis(t, 3.4, 4.0, 17.2, 17.8);
+  put(screen, so, 0, (1 - eo(prog(t, 3.4, 4.0))) * 40 - prog(t, 17.2, 17.8) * 20, lerp(.96, 1, eo(prog(t, 3.4, 4.0))));
+  placeWins(t);
+  const gh = GHOSTS.find(([a, b]) => t >= a && t < b);
+  if (gh) {
+    const [a, b, r] = gh;
+    Object.assign(ghost.style, { left: r[0] + "px", top: r[1] + "px", width: r[2] + "px", height: r[3] + "px", opacity: Math.min(prog(t, a, a + .08), 1 - prog(t, b - .1, b)) });
+  } else ghost.style.opacity = 0;
+  placeKeys(t);
+  placeRing(t);
+  placeS4(t);
+  placeS5(t);
+
+  // scene 6
+  const o6 = vis(t, 25.7, 26.2, 99, 100);
+  put(s6, o6);
+  put(icon6, eb(prog(t, 25.8, 26.5)), 0, 0, lerp(.6, 1, eb(prog(t, 25.8, 26.5))));
+  put(t6, eo(prog(t, 26.3, 26.8)), 0, (1 - eo(prog(t, 26.3, 26.8))) * 30);
+  put(l6, eo(prog(t, 26.9, 27.4)));
+  put(u6, eo(prog(t, 27.5, 28.0)), 0, (1 - eo(prog(t, 27.5, 28.0))) * 16);
+  put(g6, eo(prog(t, 28.2, 28.6)) * .9);
+  fade.style.opacity = prog(t, 29.4, 30);
+};
+window.__render(0);
+</script>
+</body>
+</html>

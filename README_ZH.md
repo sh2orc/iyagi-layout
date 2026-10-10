@@ -30,6 +30,14 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 它常驻菜单栏，关闭设置窗口后继续运行，并在登录时自动启动。它是一个 Tauri 2 + Rust 应用，签名与发布流程
 与 IYAGI Terminal 相同；窗口计算是纯 Rust crate，所有 macOS 调用都封装在小巧的类型化包装层之后。
 
+<p align="center">
+  <a href="docs/media/iyagi-layout-intro.mp4">
+    <img src="docs/media/iyagi-layout-intro.webp" alt="30 秒了解 IYAGI Layout：一个快捷键让任意窗口贴合半屏，再按一个方向键继续分割，登录时启动的菜单栏应用" width="800">
+  </a>
+  <br>
+  <sub>30 秒介绍视频(英语) · <a href="docs/media/iyagi-layout-intro.mp4">MP4, 1080p</a></sub>
+</p>
+
 ## 下载
 
 <p align="center">
@@ -194,6 +202,7 @@ cargo run -p layout-probe -- left --gap 8   # 试着贴合
 |---|---|
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)(韩语) | 决策、macOS 机制与验证结果、行为规范、任务、风险 |
 | [releases/README.md](releases/README.md) | 发布二进制文件、签名与公证步骤 |
+| [docs/media/intro/](docs/media/intro/) | 30 秒介绍视频的源码(`intro.html` + `render.mjs`，重新渲染：`node docs/media/intro/render.mjs`) |
 
 ## 状态与路线图
 
