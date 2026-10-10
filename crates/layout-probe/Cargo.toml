@@ -1,0 +1,17 @@
+[package]
+name = "layout-probe"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "IYAGI Layout — developer CLI that exercises the macOS window path without the Tauri shell."
+
+[[bin]]
+name = "layout-probe"
+path = "src/main.rs"
+
+[dependencies]
+layout-core = { workspace = true }
+layout-macos = { workspace = true }
+clap = { workspace = true }

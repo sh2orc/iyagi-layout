@@ -1,0 +1,13 @@
+[package]
+name = "layout-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "IYAGI Layout — OS-independent geometry, actions, cycle state and settings model."
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

@@ -1,0 +1,141 @@
+//! 포커스 창 찾기와 프레임 읽기/쓰기(§4-2). 쓰기 순서는 크기 → 위치 → 크기(Rectangle).
+
+use layout_core::settings::EnhancedUiPolicy;
+use layout_core::Rect;
+use objc2_app_kit::NSRunningApplication;
+use objc2_application_services::AXUIElement;
+use objc2_core_foundation::{CFRetained, CGPoint, CGSize};
+
+use crate::ax::{self, AxError};
+
+/// 다른 앱의 창 하나. `app`은 그 창을 가진 앱 요소(Enhanced UI 처리용).
+pub struct WindowHandle {
+    element: CFRetained<AXUIElement>,
+    app: CFRetained<AXUIElement>,
+    pub pid: libc::pid_t,
+    pub bundle_id: Option<String>,
+}
+
+/// 포커스 창: 최전면 앱의 AXFocusedWindow → 첫 AXWindows → 전역 포커스 요소의 AXWindow.
+pub fn focused() -> Result<Option<WindowHandle>, AxError> {
+    if !crate::permission::is_trusted() {
+        return Err(AxError::NotTrusted);
+    }
+    // SAFETY: 인자 없는 생성.
+    let system = unsafe { AXUIElement::new_system_wide() };
+    let Some(app) = ax::attr_element(&system, ax::FOCUSED_APPLICATION)? else {
+        return Ok(None);
+    };
+    let pid = ax::pid_of(&app)?;
+    let element = match ax::attr_element(&app, ax::FOCUSED_WINDOW)? {
+        Some(w) => Some(w),
+        None => match ax::attr_elements(&app, ax::WINDOWS)?.into_iter().next() {
+            Some(w) => Some(w),
+            None => match ax::attr_element(&system, ax::FOCUSED_UI_ELEMENT)? {
+                Some(focused) => {
+                    if ax::attr_string(&focused, ax::ROLE)?.as_deref() == Some(ax::ROLE_WINDOW) {
+                        Some(focused)
+                    } else {
+                        ax::attr_element(&focused, ax::WINDOW)?
+                    }
+                }
+                None => None,
+            },
+        },
+    };
+    let Some(element) = element else {
+        return Ok(None);
+    };
+    let bundle_id = NSRunningApplication::runningApplicationWithProcessIdentifier(pid)
+        .and_then(|a| a.bundleIdentifier())
+        .map(|s| s.to_string());
+    Ok(Some(WindowHandle {
+        element,
+        app,
+        pid,
+        bundle_id,
+    }))
+}
+
+impl WindowHandle {
+    pub fn frame(&self) -> Result<Rect, AxError> {
+        let p = ax::attr_point(&self.element, ax::POSITION)?.ok_or(AxError::Type("position"))?;
+        let s = ax::attr_size(&self.element, ax::SIZE)?.ok_or(AxError::Type("size"))?;
+        Ok(Rect::new(p.x, p.y, s.width, s.height))
+    }
+
+    /// 크기 속성을 바꿀 수 있는가. 판정할 수 없으면 가능하다고 본다(Rectangle과 같다).
+    pub fn is_resizable(&self) -> bool {
+        ax::is_settable(&self.element, ax::SIZE).unwrap_or(true)
+    }
+
+    pub fn is_fullscreen(&self) -> bool {
+        ax::attr_bool(&self.element, ax::FULL_SCREEN)
+            .ok()
+            .flatten()
+            .unwrap_or(false)
+    }
+
+    pub fn enhanced_ui(&self) -> Option<bool> {
+        ax::attr_bool(&self.app, ax::ENHANCED_USER_INTERFACE)
+            .ok()
+            .flatten()
+    }
+
+    /// 목표 프레임 적용 후 실제 프레임을 돌려준다. 크기 고정 창은 위치만 옮긴다.
+    pub fn set_frame(&self, target: Rect, policy: EnhancedUiPolicy) -> Result<Rect, AxError> {
+        let enhanced_was_on = match policy {
+            EnhancedUiPolicy::Off => false,
+            _ => self.enhanced_ui() == Some(true),
+        };
+        if enhanced_was_on {
+            let _ = ax::set_bool(&self.app, ax::ENHANCED_USER_INTERFACE, false);
+        }
+        let result = self.apply(target);
+        if enhanced_was_on {
+            let restore = match policy {
+                EnhancedUiPolicy::DisableEnable => true,
+                EnhancedUiPolicy::Automatic => assistive_technology_active(),
+                EnhancedUiPolicy::DisableOnly | EnhancedUiPolicy::Off => false,
+            };
+            if restore {
+                let _ = ax::set_bool(&self.app, ax::ENHANCED_USER_INTERFACE, true);
+            }
+        }
+        result
+    }
+
+    fn apply(&self, target: Rect) -> Result<Rect, AxError> {
+        let size = CGSize::new(target.w, target.h);
+        let pos = CGPoint::new(target.x, target.y);
+        let resizable = self.is_resizable();
+        if resizable {
+            ax::set_size(&self.element, ax::SIZE, size)?;
+        }
+        ax::set_point(&self.element, ax::POSITION, pos)?;
+        if resizable {
+            ax::set_size(&self.element, ax::SIZE, size)?;
+        }
+        let mut actual = self.frame()?;
+        // 최소 크기 등으로 밀렸으면 위치만 한 번 더 맞춘다(목표 영역 안에 머물게).
+        if (actual.x - target.x).abs() > 1.0 || (actual.y - target.y).abs() > 1.0 {
+            ax::set_point(&self.element, ax::POSITION, pos)?;
+            actual = self.frame()?;
+        }
+        Ok(actual)
+    }
+}
+
+/// VoiceOver 또는 스위치 제어가 켜져 있는가(Enhanced UI를 되돌릴지 판단).
+fn assistive_technology_active() -> bool {
+    let read = |domain: &str, key: &str| {
+        std::process::Command::new("defaults")
+            .args(["read", domain, key])
+            .output()
+            .ok()
+            .map(|o| String::from_utf8_lossy(&o.stdout).trim() == "1")
+            .unwrap_or(false)
+    };
+    read("com.apple.universalaccess", "voiceOverOnOffKey")
+        || read("com.apple.universalaccess", "switchControlEnabled")
+}

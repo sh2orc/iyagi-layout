@@ -1,0 +1,24 @@
+[package]
+name = "layout-macos"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "IYAGI Layout — macOS Accessibility, NSScreen, SMAppService and permission wrappers."
+
+[dependencies]
+layout-core = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+serde = { workspace = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+libc = { workspace = true }
+objc2 = { workspace = true }
+objc2-foundation = { workspace = true, features = ["NSLocale", "NSArray", "NSString"] }
+objc2-core-foundation = { workspace = true }
+objc2-core-graphics = { workspace = true }
+objc2-app-kit = { workspace = true, features = ["NSScreen", "NSWorkspace", "NSRunningApplication", "objc2-core-graphics"] }
+objc2-application-services = { workspace = true, features = ["HIServices", "AXUIElement", "AXValue", "AXError", "AXAttributeConstants", "AXValueConstants", "libc", "objc2-core-graphics"] }
+objc2-service-management = { workspace = true }

@@ -1,0 +1,20 @@
+# Rust
+/target/
+**/*.rs.bk
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Tauri
+src-tauri/gen/
+# actool 산출물 (scripts/build-icon-assets.sh)
+src-tauri/icons/build/
+
+# Editors/OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
