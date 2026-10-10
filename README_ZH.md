@@ -32,9 +32,19 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 
 ## 下载
 
-> **目前尚未发布安装包。** 使用 Developer ID 签名的 DMG 通过 `npm run tauri build` 在本地构建(见
-> [开发](#开发))。经过公证的版本将与 SHA-256 一起发布到 [`releases/`](releases/README.md)，与 IYAGI
-> Terminal 一致。
+| 平台 | 文件 | 大小 | SHA-256 |
+|---|---|---|---|
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+
+<details>
+<summary>macOS 签名与信任</summary>
+
+该构建使用 Developer ID 签名并已公证，公证票据已装订到应用和 DMG 上，因此打开时不会出现 Gatekeeper
+警告 —— `spctl` 判定为 `source=Notarized Developer ID`。
+
+公布的 SHA-256 与 DMG 位于同一仓库，只能发现传输过程中的损坏，无法发现仓库本身被篡改 ——
+参见 [releases/README.md](releases/README.md)。
+</details>
 
 ## 为什么选择 IYAGI Layout
 
@@ -180,9 +190,9 @@ cargo run -p layout-probe -- left --gap 8   # 试着贴合
 ## 状态与路线图
 
 v0.1.0 —— **MVP 已可用。** 四方向贴合、连续分割、设置窗口、登录时启动和四种语言已在 macOS 26 上运行，
-使用 Developer ID 签名的构建可以安装到 `/Applications` 使用。
+已公证的构建可通过 DMG 安装到 `/Applications` 使用。
 
-- **下一步：** 将已公证的版本及校验和发布到 `releases/`，在更多应用和显示器组合下做 QA
+- **下一步：** 在更多应用和显示器组合下做 QA，提供 GitHub 上的发布下载
 - **之后：** 最大化 / 还原 / 居中、四分之一快捷键、移动到相邻显示器、可选的拖到边缘贴合
 
 ## 许可证

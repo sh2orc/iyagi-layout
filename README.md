@@ -35,9 +35,19 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
 ## Download
 
-> **No installer is published yet.** A Developer ID–signed DMG is built locally with
-> `npm run tauri build` (see [Development](#development)); notarized releases will be published in
-> [`releases/`](releases/README.md) with their SHA-256, as IYAGI Terminal does.
+| Platform | File | Size | SHA-256 |
+|---|---|---|---|
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+
+<details>
+<summary>Signing & trust on macOS</summary>
+
+The build is signed with a Developer ID, notarized, and the ticket is stapled to both the app and
+the DMG, so it opens without Gatekeeper warnings — `spctl` reports `source=Notarized Developer ID`.
+
+The published SHA-256 travels in the same repository as the DMG, so it detects transport
+corruption, not a compromise of the repository itself — see [releases/README.md](releases/README.md).
+</details>
 
 ## Why IYAGI Layout
 
@@ -197,9 +207,9 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 ## Status & Roadmap
 
 v0.1.0 — **MVP working.** Four-direction snapping, follow-up split, settings window, launch at
-login and four languages run on macOS 26; a Developer ID–signed build installs from `/Applications`.
+login and four languages run on macOS 26; the notarized build installs from `/Applications` or the DMG.
 
-- **Next:** notarized release and checksum in `releases/`, QA across more apps and monitor layouts
+- **Next:** QA across more apps and monitor layouts, a GitHub-hosted release download
 - **Later:** maximize / restore / center, quarter shortcuts, move to the adjacent monitor,
   optional edge-drag snapping
 

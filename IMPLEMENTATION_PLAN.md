@@ -450,7 +450,7 @@ iyagi-term과 달리 macOS 전용이라 Windows/Linux 번들 job이 없다. macO
 | L07 로그인 항목 | S | ✅ 코드 | SMAppService status/register/unregister, 트레이·설정 창 토글 | **재부팅 QA 필요**(dev 래퍼로 등록 시 dev 경로를 가리킨다) |
 | L10 설정 창 | L | ✅ | 권한 카드(2초마다 갱신), 단축키 녹화기(실제 파서 검증), 간격·순환, 로그인 항목, 로그 폴더 | UI 실기 확인 필요 |
 | L08 생명주기·QA | M | 🔶 | Chrome에서 4방향·연속 분할 실기 확인. 수동 실행 시 설정 창 표시, 로그인 자동 실행 시 메뉴 막대만(`launch::launched_at_login` 어림 규칙: 세션 로그인 120초 이내). 나머지 §9-2 매트릭스 수행 남음 | 매트릭스 통과 |
-| L09 릴리스 | M | 🔶 | 실제 아이콘(`icons/source/layout.png` → `scripts/generate_icons.py`가 RGBA PNG·ICNS 생성; tauri-codegen은 RGBA만 받는다). **macOS 26 아이콘**: .icns만 있으면 Tahoe가 회색 둥근 사각형 안에 흐릿하게 그리므로 `icons/AppIcon.icon`(Icon Composer 형식)을 `scripts/build-icon-assets.sh`가 actool로 `Assets.car`로 컴파일해 `bundle.macOS.files`로 넣고 Info.plist에 `CFBundleIconName=AppIcon`을 둔다(Tauri 2.12 미지원 기능의 우회). Developer ID 서명 DMG 생성 완료, `/Applications`에 설치해 로그인 항목 등록 확인. **공증·스테이플·releases/ 등록 남음**(`iyagi-notary` 키체인 프로필 필요) | §9-3 충족 |
+| L09 릴리스 | M | ✅ | 실제 아이콘(`icons/source/layout.png` → `scripts/generate_icons.py`가 RGBA PNG·ICNS 생성; tauri-codegen은 RGBA만 받는다). **macOS 26 아이콘**: .icns만 있으면 Tahoe가 회색 둥근 사각형 안에 흐릿하게 그리므로 `icons/AppIcon.icon`(Icon Composer 형식)을 `scripts/build-icon-assets.sh`가 actool로 `Assets.car`로 컴파일해 `bundle.macOS.files`로 넣고 Info.plist에 `CFBundleIconName=AppIcon`을 둔다(Tauri 2.12 미지원 기능의 우회). Developer ID 서명·공증·스테이플 완료, `releases/IYAGI.Layout_0.1.0_aarch64.dmg` 등록(2026-10-10), `/Applications`에서 로그인 항목 등록 확인 | §9-3 충족 |
 | L11 확장 액션 | M | 🔲 후속 | 최대화/복원/중앙/1/4/옆 모니터 | — |
 
 순서는 L01 → L02 → L03 → L04 → L05 → L06 → L07 → L10 → L08 → L09(L10이 MVP에 들어왔다). L02는 L01과 병행 가능. L03·L04는 probe 덕분에 Tauri 셸 없이 검증한다.

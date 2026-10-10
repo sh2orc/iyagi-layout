@@ -34,9 +34,19 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 
 ## 다운로드
 
-> **아직 게시된 설치 파일은 없습니다.** Developer ID로 서명한 DMG는 `npm run tauri build`로 로컬에서
-> 만듭니다([개발](#개발) 참고). 공증을 마친 릴리스는 IYAGI Terminal처럼 SHA-256과 함께
-> [`releases/`](releases/README.md)에 게시할 예정입니다.
+| 플랫폼 | 파일 | 크기 | SHA-256 |
+|---|---|---|---|
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+
+<details>
+<summary>macOS 서명과 신뢰</summary>
+
+빌드는 Developer ID로 서명하고 공증했으며 티켓을 앱과 DMG 모두에 스테이플해 Gatekeeper 경고 없이
+열립니다 — `spctl`은 `source=Notarized Developer ID`로 판정합니다.
+
+게시된 SHA-256은 DMG와 같은 저장소에 있어 전송 중 손상은 감지하지만 저장소 자체가 침해된 경우는
+검증하지 못합니다 — [releases/README.md](releases/README.md)를 참고하세요.
+</details>
 
 ## 왜 IYAGI Layout인가
 
@@ -192,9 +202,9 @@ PNG/ICNS 세트를 만들고 `scripts/build-icon-assets.sh`가 Icon Composer 에
 ## 상태와 로드맵
 
 v0.1.0 — **MVP 동작.** 4방향 배치, 연속 분할, 설정 창, 로그인 시 실행, 4개 언어가 macOS 26에서
-동작하고, Developer ID로 서명한 빌드를 `/Applications`에서 설치해 쓸 수 있습니다.
+동작하고, 공증을 마친 빌드를 DMG로 `/Applications`에 설치해 쓸 수 있습니다.
 
-- **다음:** 공증된 릴리스와 체크섬을 `releases/`에 게시, 더 많은 앱·모니터 구성에서 QA
+- **다음:** 더 많은 앱·모니터 구성에서 QA, GitHub 릴리스 다운로드 링크
 - **이후:** 최대화 / 복원 / 중앙, 1/4 단축키, 옆 모니터로 이동, 선택형 가장자리 드래그 스냅
 
 ## 라이선스
