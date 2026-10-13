@@ -1,11 +1,13 @@
 # IYAGI Layout CI — macOS 전용 앱이라 번들 job도 macOS뿐이다.
 #
-# - core-check(ubuntu): layout-core는 OS 의존이 없어 리눅스 컨테이너에서 싸게 검증한다.
+# - core-check(ubuntu): layout-core는 OS 의존이 없어 리눅스에서 싸게 검증한다(Rust 1.89 고정).
 # - macos-check(GitHub-hosted macos): fmt/clippy/test + 번들 없는 빌드. 서명·권한이
 #   필요 없어 PR에서도 돈다.
 # - bundle-macos(self-hosted, 보호 ref만): Developer ID 서명 DMG. iyagi-term의
 #   .github/workflows/ci.yml과 같은 보안 정책(self-hosted runner는 main/tag push에서만,
 #   PR에서는 절대 실행하지 않음; 서버 측 설정이 실제 경계)을 따른다.
+#   러너를 등록하고 저장소 변수 SIGNED_BUNDLE=true를 설정했을 때만 실행된다. 없으면 건너뛴다
+#   (러너 없이 두면 main·태그 push마다 queued 상태로 남는다).
 name: ci
 
 on:
@@ -22,9 +24,11 @@ concurrency:
 jobs:
   core-check:
     runs-on: ubuntu-latest
-    container: rust:1.89
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.89
+        with:
+          components: rustfmt
       - run: cargo fmt -p layout-core --check
       - run: cargo test -p layout-core --locked
 
@@ -50,7 +54,7 @@ jobs:
       - run: npm run tauri build -- --no-bundle
 
   bundle-macos:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+    if: vars.SIGNED_BUNDLE == 'true' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
     runs-on: [self-hosted, macos]
     steps:
       - uses: actions/checkout@v4
