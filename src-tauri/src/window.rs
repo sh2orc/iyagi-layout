@@ -26,6 +26,15 @@ pub fn show_settings(app: &AppHandle) {
     }
 }
 
+/// 설정 창의 "메뉴 막대로 숨기기". 창의 빨간 닫기 버튼과 같다: 창만 숨기고 앱은 메뉴 막대에 남는다.
+#[tauri::command]
+pub fn hide_settings(app: AppHandle) {
+    if let Some(window) = app.get_webview_window(SETTINGS_LABEL) {
+        let _ = window.hide();
+    }
+    tracing::info!("settings window hidden — the app stays in the menu bar");
+}
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AppInfo {

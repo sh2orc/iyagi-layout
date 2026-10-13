@@ -55,11 +55,3 @@ pub fn shortcut_validate(spec: String) -> Result<String, String> {
     layout_core::settings::check_shortcut_shape(&spec)?;
     crate::hotkeys::validate(&spec)
 }
-
-/// 설정 창의 "종료" 버튼. 트레이 "종료"와 같은 경로: 단축키를 해제하고 앱을 끝낸다.
-#[tauri::command]
-pub fn app_quit(app: AppHandle) {
-    tracing::info!("quit requested from the settings window");
-    crate::hotkeys::unregister_all(&app);
-    app.exit(0);
-}

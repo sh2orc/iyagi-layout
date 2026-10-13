@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  appInfo, appQuit, loginItemSet, onSettingsChanged, openAccessibilitySettings, openLogDir, openLoginItemsSettings,
+  appInfo, hideSettings, loginItemSet, onSettingsChanged, openAccessibilitySettings, openLogDir, openLoginItemsSettings,
   permissionPrompt, settingsGet, settingsSet, statusGet,
   type ActionKey, type AppInfo, type Settings, type Status,
 } from "./api";
@@ -182,7 +182,7 @@ export function App() {
 
       <footer className="actions">
         <button onClick={() => void openLogDir()}>{t("openLogs")}</button>
-        <button className="danger" onClick={() => void appQuit()} title={t("quitHint")}>{t("quit")}</button>
+        <button onClick={() => void hideSettings()} title={t("hideHint")}>{t("hideToMenuBar")}</button>
         <span className="muted path" title={path ?? ""}>{path ?? ""}</span>
         <button className="primary" disabled={!dirty} onClick={() => void save()}>{t("save")}</button>
       </footer>

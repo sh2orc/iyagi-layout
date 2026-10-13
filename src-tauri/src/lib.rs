@@ -34,13 +34,13 @@ pub fn run() {
             settings::settings_path,
             window::app_info,
             window::open_log_dir,
+            window::hide_settings,
             system::status_get,
             system::permission_prompt,
             system::open_accessibility_settings,
             system::login_item_set,
             system::open_login_items_settings,
             system::shortcut_validate,
-            system::app_quit,
         ])
         .setup(|app| {
             // 메뉴 막대 전용(Info.plist의 LSUIElement를 번들 밖 dev 실행에서도 보강).

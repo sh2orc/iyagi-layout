@@ -48,8 +48,8 @@ const en = {
   loginOff: "Turn off",
   loginOn: "Turn on",
   openLogs: "Open logs folder",
-  quit: "Quit app",
-  quitHint: "Quits the app completely. Shortcuts stop working.",
+  hideToMenuBar: "Hide to menu bar",
+  hideHint: "Closes this window. The app keeps running in the menu bar and shortcuts keep working. Quit from the menu-bar icon.",
   save: "Save",
   recording: "Press keys… (Esc to cancel)",
 } as const;
@@ -88,8 +88,8 @@ const ko: Dict = {
   loginOff: "끄기",
   loginOn: "켜기",
   openLogs: "로그 폴더 열기",
-  quit: "앱 종료",
-  quitHint: "앱을 완전히 종료합니다. 단축키도 멈춥니다.",
+  hideToMenuBar: "메뉴 막대로 숨기기",
+  hideHint: "이 창만 닫습니다. 앱은 메뉴 막대에서 계속 실행되고 단축키도 동작합니다. 종료는 메뉴 막대 아이콘에서 합니다.",
   save: "저장",
   recording: "키를 누르세요… (Esc 취소)",
 };
@@ -125,8 +125,8 @@ const ja: Dict = {
   loginOff: "オフにする",
   loginOn: "オンにする",
   openLogs: "ログフォルダを開く",
-  quit: "アプリを終了",
-  quitHint: "アプリを完全に終了します。ショートカットも無効になります。",
+  hideToMenuBar: "メニューバーに隠す",
+  hideHint: "このウインドウだけを閉じます。アプリはメニューバーで動き続け、ショートカットも有効です。終了はメニューバーのアイコンから行います。",
   save: "保存",
   recording: "キーを押してください… (Esc でキャンセル)",
 };
@@ -162,8 +162,8 @@ const zh: Dict = {
   loginOff: "关闭",
   loginOn: "开启",
   openLogs: "打开日志文件夹",
-  quit: "退出应用",
-  quitHint: "完全退出应用，快捷键也会停止工作。",
+  hideToMenuBar: "隐藏到菜单栏",
+  hideHint: "仅关闭此窗口。应用会继续在菜单栏运行，快捷键仍然有效。退出请使用菜单栏图标。",
   save: "保存",
   recording: "请按下按键… (按 Esc 取消)",
 };

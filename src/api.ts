@@ -50,7 +50,7 @@ export const permissionPrompt = () => invoke<Status>("permission_prompt");
 export const openAccessibilitySettings = () => invoke<void>("open_accessibility_settings");
 export const loginItemSet = (enabled: boolean) => invoke<Status>("login_item_set", { enabled });
 export const openLoginItemsSettings = () => invoke<void>("open_login_items_settings");
-export const appQuit = () => invoke<void>("app_quit");
+export const hideSettings = () => invoke<void>("hide_settings");
 export const shortcutValidate = (spec: string) => invoke<string>("shortcut_validate", { spec });
 
 export const onSettingsChanged = (handler: (s: Settings) => void): Promise<UnlistenFn> =>

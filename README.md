@@ -99,8 +99,8 @@ independent of GitHub — see [releases/README.md](releases/README.md).
 
 **Background service**
 
-- Menu-bar only (`LSUIElement`): no Dock icon, no app menu; closing the settings window hides it
-  and the app keeps running. **Quit** is in the menu-bar menu and in the settings window
+- Menu-bar only (`LSUIElement`): no Dock icon, no app menu; closing the settings window (or its **Hide to menu bar**
+  button) hides it and the app keeps running. **Quit** is in the menu-bar menu
 - Single instance: launching it again just opens the settings window
 - **Launch at login** through `SMAppService` — it shows up under System Settings › General ›
   Login Items, survives moving the app, and its status (on / off / waiting for approval) is read
