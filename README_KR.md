@@ -43,7 +43,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 ## 다운로드
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon) 다운로드">
   </a>
 </p>
@@ -51,7 +51,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 
 | 플랫폼 | 파일 | 크기 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.1_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg) | 9 MB | `2fe34193a8525e20b82231af913726b19c030a6e16cdbd5c691890d9126deade` |
 
 <details>
 <summary>macOS 서명과 신뢰</summary>
@@ -59,8 +59,8 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 빌드는 Developer ID로 서명하고 공증했으며 티켓을 앱과 DMG 모두에 스테이플해 Gatekeeper 경고 없이
 열립니다 — `spctl`은 `source=Notarized Developer ID`로 판정합니다.
 
-게시된 SHA-256은 DMG와 같은 저장소에 있어 전송 중 손상은 감지하지만 저장소 자체가 침해된 경우는
-검증하지 못합니다 — [releases/README.md](releases/README.md)를 참고하세요.
+게시된 SHA-256(GitHub 릴리스 노트)은 전송 중 손상을 감지하지만 릴리스 자체가 침해된 경우는
+검증하지 못합니다. 스테이플된 공증 티켓은 GitHub과 무관하게 macOS가 직접 확인합니다 — [releases/README.md](releases/README.md)를 참고하세요.
 </details>
 
 ## 왜 IYAGI Layout인가
@@ -71,7 +71,8 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
   하나뿐입니다. 전역 단축키는 Carbon 핫키 API를 써서 이벤트 탭을 설치하지 않으므로 키보드를
   느리게 만들지 않습니다.
 - **상태를 숨기지 않습니다.** 권한이 없거나, 설정 파일이 깨졌거나, 단축키를 등록하지 못하면 메뉴
-  막대 상태 줄이 알려 줍니다. 로그인 시 실행 여부는 앱이 기억하지 않고 매번 OS에서 읽습니다.
+  막대 상태 줄이 알려 줍니다. 단축키로 창을 옮길 수 없으면(전체 화면 창, 포커스된 창 없음, IYAGI Layout 자신의 창)
+  메뉴 막대 아이콘 옆에 3초 동안 경고가 뜨고, 상태 줄에는 마지막 실패가 남습니다. 로그인 시 실행 여부는 앱이 기억하지 않고 매번 OS에서 읽습니다.
 - **지금 쓰는 기기에 맞춥니다.** 계산은 화면의 사용 가능 영역(메뉴 막대·노치 아래, Dock 옆)을 키를
   누를 때마다 다시 읽어 쓰므로 모니터를 꽂고 빼도 그대로 동작합니다.
 
@@ -99,7 +100,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 - **로그인 시 실행**은 `SMAppService`로 등록합니다 — 시스템 설정 › 일반 › 로그인 항목에 나타나고, 앱을
   옮겨도 유지되며, 상태(켜짐 / 꺼짐 / 승인 대기)를 macOS에서 다시 읽습니다. 로그인 직후 자동 실행은
   조용히 메뉴 막대에만 머물고, 직접 실행하면 설정 창을 엽니다
-- 메뉴 막대 상태 줄: 손쉬운 사용 필요 → 설정 파일 오류 → 단축키 등록 실패 → 그 외에는 현재 단축키
+- 메뉴 막대 상태 줄: 손쉬운 사용 필요 → 설정 파일 오류 → 단축키 등록 실패 → 마지막 실패한 동작 → 그 외에는 현재 단축키
 
 **설정과 화면**
 
@@ -218,10 +219,13 @@ PNG/ICNS 세트를 만들고 `scripts/build-icon-assets.sh`가 Icon Composer 에
 
 ## 상태와 로드맵
 
+v0.1.1 — **앱 전환 직후 재시도.** 앱을 막 바꾼 직후 누른 단축키는 macOS가 포커스를 정할 때까지 최대 1.5초
+기다리고, 창을 옮길 수 없으면 메뉴 막대에 경고를 띄웁니다. DMG는 [v0.1.1 릴리스](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.1)에서 받을 수 있습니다.
+
 v0.1.0 — **MVP 동작.** 4방향 배치, 연속 분할, 설정 창, 로그인 시 실행, 4개 언어가 macOS 26에서
 동작하고, 공증을 마친 빌드를 DMG로 `/Applications`에 설치해 쓸 수 있습니다.
 
-- **다음:** 더 많은 앱·모니터 구성에서 QA, GitHub 릴리스 다운로드 링크
+- **다음:** 더 많은 앱·모니터 구성에서 QA
 - **이후:** 최대화 / 복원 / 중앙, 1/4 단축키, 옆 모니터로 이동, 선택형 가장자리 드래그 스냅
 
 ## 라이선스

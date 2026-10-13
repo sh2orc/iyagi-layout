@@ -41,7 +41,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 ## 下载
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="下载适用于 macOS(Apple Silicon)的 IYAGI Layout">
   </a>
 </p>
@@ -49,7 +49,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 
 | 平台 | 文件 | 大小 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.1_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg) | 9 MB | `2fe34193a8525e20b82231af913726b19c030a6e16cdbd5c691890d9126deade` |
 
 <details>
 <summary>macOS 签名与信任</summary>
@@ -57,7 +57,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 该构建使用 Developer ID 签名并已公证，公证票据已装订到应用和 DMG 上，因此打开时不会出现 Gatekeeper
 警告 —— `spctl` 判定为 `source=Notarized Developer ID`。
 
-公布的 SHA-256 与 DMG 位于同一仓库，只能发现传输过程中的损坏，无法发现仓库本身被篡改 ——
+公布的 SHA-256(见 GitHub 发布说明)只能发现传输过程中的损坏，无法发现发布本身被篡改的情况。已装订的公证票据由 macOS 独立验证，与 GitHub 无关 ——
 参见 [releases/README.md](releases/README.md)。
 </details>
 
@@ -67,7 +67,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
   Finder 等位于前台的应用都可以使用。
 - **安静的设计。** 没有 Dock 图标，不联网，不收集遥测数据。它只请求辅助功能这一项权限。全局快捷键使用
   Carbon 热键 API，不会安装事件监听(event tap)，也就不会拖慢键盘。
-- **如实呈现状态。** 缺少权限、设置文件损坏或快捷键无法注册时，菜单栏状态行都会告诉你。登录时启动的状态
+- **如实呈现状态。** 缺少权限、设置文件损坏或快捷键无法注册时，菜单栏状态行都会告诉你。快捷键无法移动窗口时(全屏窗口、没有聚焦的窗口、IYAGI Layout 自己的窗口)，菜单栏图标旁会显示 3 秒警告，状态行保留最后一次失败。登录时启动的状态
   不由应用自己记忆，而是每次从系统读取。
 - **适配你手上的设备。** 计算使用屏幕的可用区域(菜单栏和刘海之下、Dock 旁边)，每次按键都会重新读取，
   所以插拔显示器也能正常工作。
@@ -93,7 +93,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 - 单实例：再次启动只会打开设置窗口
 - **登录时启动**通过 `SMAppService` 注册 —— 显示在系统设置 › 通用 › 登录项中，移动应用后依然有效，状态
   (开启 / 关闭 / 等待批准)会从 macOS 读回。登录时的自动启动安静地停留在菜单栏，手动启动则打开设置窗口
-- 菜单栏状态行：需要辅助功能 → 设置文件错误 → 快捷键注册失败 → 否则显示当前快捷键
+- 菜单栏状态行：需要辅助功能 → 设置文件错误 → 快捷键注册失败 → 上次失败的操作 → 否则显示当前快捷键
 
 **设置与外观**
 
@@ -206,10 +206,12 @@ cargo run -p layout-probe -- left --gap 8   # 试着贴合
 
 ## 状态与路线图
 
+v0.1.1 —— **切换应用后重试。** 切换应用后立即按下的快捷键会等待最长 1.5 秒，直到 macOS 确定焦点；无法移动窗口时，菜单栏会显示警告。DMG 可从 [v0.1.1 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.1) 下载。
+
 v0.1.0 —— **MVP 已可用。** 四方向贴合、连续分割、设置窗口、登录时启动和四种语言已在 macOS 26 上运行，
 已公证的构建可通过 DMG 安装到 `/Applications` 使用。
 
-- **下一步：** 在更多应用和显示器组合下做 QA，提供 GitHub 上的发布下载
+- **下一步：** 在更多应用和显示器组合下做 QA
 - **之后：** 最大化 / 还原 / 居中、四分之一快捷键、移动到相邻显示器、可选的拖到边缘贴合
 
 ## 许可证

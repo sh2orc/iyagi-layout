@@ -44,7 +44,7 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 ## ダウンロード
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon)をダウンロード">
   </a>
 </p>
@@ -52,7 +52,7 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 
 | プラットフォーム | ファイル | サイズ | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.1_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg) | 9 MB | `2fe34193a8525e20b82231af913726b19c030a6e16cdbd5c691890d9126deade` |
 
 <details>
 <summary>macOS の署名と信頼性</summary>
@@ -60,8 +60,8 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 ビルドは Developer ID で署名・公証され、チケットはアプリと DMG の両方にステープルされているため、
 Gatekeeper の警告なしで開けます — `spctl` は `source=Notarized Developer ID` と判定します。
 
-公開している SHA-256 は DMG と同じリポジトリにあるため、転送中の破損は検出できますが、リポジトリ
-自体が侵害された場合は検出できません — [releases/README.md](releases/README.md) を参照してください。
+公開している SHA-256(GitHub のリリースノート)は転送中の破損を検出しますが、リリース自体が改ざんされた場合は検出できません。
+ステープルされた公証チケットは GitHub とは無関係に macOS が直接確認します — [releases/README.md](releases/README.md) を参照してください。
 </details>
 
 ## なぜ IYAGI Layout か
@@ -72,7 +72,7 @@ Gatekeeper の警告なしで開けます — `spctl` は `source=Notarized Deve
   アクセシビリティだけです。グローバルショートカットは Carbon ホットキー API を使い、イベントタップを
   インストールしないので、キーボードを遅くしません。
 - **状態を隠しません。** 権限がない、設定ファイルが壊れている、ショートカットを登録できない — そうした
-  ときはメニューバーのステータス行が知らせます。ログイン時起動の状態はアプリが覚えず、毎回 OS から
+  ときはメニューバーのステータス行が知らせます。ショートカットでウインドウを動かせないとき(フルスクリーンのウインドウ、フォーカスされたウインドウがない、IYAGI Layout 自身のウインドウ)は、メニューバーのアイコン横に 3 秒間警告が出て、ステータス行に直前の失敗が残ります。ログイン時起動の状態はアプリが覚えず、毎回 OS から
   読み取ります。
 - **今あるマシンに合わせます。** 計算には画面の使用可能領域(メニューバーとノッチの下、Dock の横)を
   キーを押すたびに読み直して使うので、モニターを抜き差ししてもそのまま動きます。
@@ -101,7 +101,7 @@ Gatekeeper の警告なしで開けます — `spctl` は `source=Notarized Deve
   アプリを移動しても有効で、状態(オン / オフ / 承認待ち)は macOS から読み戻します。ログイン直後の
   自動起動は静かにメニューバーにとどまり、手動で起動すると設定ウインドウが開きます
 - メニューバーのステータス行: アクセシビリティが必要 → 設定ファイルのエラー → ショートカット登録失敗
-  → それ以外は現在のショートカット
+  → 直前に失敗した操作 → それ以外は現在のショートカット
 
 **設定と外観**
 
@@ -221,10 +221,12 @@ PNG/ICNS 一式を作り、`scripts/build-icon-assets.sh` が Icon Composer ア�
 
 ## ステータスとロードマップ
 
+v0.1.1 — **アプリ切り替え直後の再試行。** アプリを切り替えた直後に押したショートカットは、macOS がフォーカスを決めるまで最大 1.5 秒待ち、ウインドウを動かせないときはメニューバーに警告を出します。DMG は [v0.1.1 リリース](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.1) から入手できます。
+
 v0.1.0 — **MVP 動作中。** 4 方向の配置、連続分割、設定ウインドウ、ログイン時起動、4 言語が macOS 26 で
 動作し、公証済みのビルドを DMG から `/Applications` にインストールして使えます。
 
-- **次:** より多くのアプリ・モニター構成での QA、GitHub 上のリリースダウンロード
+- **次:** より多くのアプリ・モニター構成での QA
 - **その後:** 最大化 / 元に戻す / 中央、1/4 のショートカット、隣のモニターへ移動、任意のエッジドラッグスナップ
 
 ## ライセンス

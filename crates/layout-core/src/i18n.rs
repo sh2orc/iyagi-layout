@@ -67,6 +67,14 @@ pub enum Msg {
     ActionRight,
     ActionUp,
     ActionDown,
+    /// 전체 화면 창은 건드리지 않는다(macOS가 전체 화면 Space에 묶어 둔다).
+    FullScreenSkipped,
+    /// 재시도 끝에도 포커스 창을 찾지 못했다.
+    NoFocusedWindow,
+    /// 지금 앞에 있는 창이 IYAGI Layout 자신의 창이다.
+    OwnWindow,
+    /// 창 위치·크기를 읽거나 쓰지 못했다.
+    MoveFailed,
 }
 
 impl Msg {
@@ -143,6 +151,26 @@ pub fn tr(lang: Lang, msg: Msg) -> &'static str {
         (ActionDown, Ko) => "아래 절반",
         (ActionDown, Ja) => "下半分",
         (ActionDown, Zh) => "下半屏",
+
+        (FullScreenSkipped, En) => "Full-screen windows can't be moved",
+        (FullScreenSkipped, Ko) => "전체 화면 창은 옮길 수 없습니다",
+        (FullScreenSkipped, Ja) => "全画面ウインドウは移動できません",
+        (FullScreenSkipped, Zh) => "无法移动全屏窗口",
+
+        (NoFocusedWindow, En) => "No focused window",
+        (NoFocusedWindow, Ko) => "포커스된 창이 없습니다",
+        (NoFocusedWindow, Ja) => "フォーカス中のウインドウがありません",
+        (NoFocusedWindow, Zh) => "没有聚焦的窗口",
+
+        (OwnWindow, En) => "Select another app's window first",
+        (OwnWindow, Ko) => "다른 앱의 창을 먼저 선택하세요",
+        (OwnWindow, Ja) => "先に他のアプリのウインドウを選択してください",
+        (OwnWindow, Zh) => "请先选择其他应用的窗口",
+
+        (MoveFailed, En) => "Could not move the window",
+        (MoveFailed, Ko) => "창을 옮기지 못했습니다",
+        (MoveFailed, Ja) => "ウインドウを移動できませんでした",
+        (MoveFailed, Zh) => "无法移动窗口",
     }
 }
 
@@ -185,6 +213,10 @@ mod tests {
             Msg::ActionRight,
             Msg::ActionUp,
             Msg::ActionDown,
+            Msg::FullScreenSkipped,
+            Msg::NoFocusedWindow,
+            Msg::OwnWindow,
+            Msg::MoveFailed,
         ];
         for lang in [Lang::En, Lang::Ko, Lang::Ja, Lang::Zh] {
             for m in msgs {

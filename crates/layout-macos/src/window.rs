@@ -2,7 +2,7 @@
 
 use layout_core::settings::EnhancedUiPolicy;
 use layout_core::Rect;
-use objc2_app_kit::NSRunningApplication;
+use objc2_app_kit::{NSRunningApplication, NSWorkspace};
 use objc2_application_services::AXUIElement;
 use objc2_core_foundation::{CFRetained, CGPoint, CGSize};
 
@@ -55,6 +55,14 @@ pub fn focused() -> Result<Option<WindowHandle>, AxError> {
         pid,
         bundle_id,
     }))
+}
+
+/// 지금 최전면 앱의 번들 ID. 포커스 창을 못 찾았을 때 로그에 "앞에 뭐가 있었는지"를 남기려고 쓴다.
+pub fn frontmost_bundle_id() -> Option<String> {
+    NSWorkspace::sharedWorkspace()
+        .frontmostApplication()
+        .and_then(|a| a.bundleIdentifier())
+        .map(|s| s.to_string())
 }
 
 impl WindowHandle {

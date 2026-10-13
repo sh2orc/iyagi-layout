@@ -1,7 +1,9 @@
 //! 메뉴 막대 아이콘과 메뉴. 설정은 설정 창에서 바꾸고, 여기는 진입점과 상태만 둔다.
 //! 메뉴 문구는 `layout_core::i18n`(시스템 언어 기준)에서 온다.
 
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Mutex;
+use std::time::Duration;
 
 use layout_core::i18n::Msg;
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem};
@@ -9,6 +11,9 @@ use tauri::tray::TrayIconBuilder;
 use tauri::{App, AppHandle, Manager};
 
 pub const TRAY_ID: &str = "main";
+/// 실패 문구를 메뉴 막대 제목으로 띄우는 시간. 연달아 실패하면 마지막 것만 남긴다.
+const FLASH_DURATION: Duration = Duration::from_secs(3);
+static FLASH_SEQ: AtomicU64 = AtomicU64::new(0);
 
 /// 동적으로 갱신하는 메뉴 항목 핸들.
 pub struct TrayHandles {
@@ -134,7 +139,29 @@ pub fn refresh_status(app: &AppHandle) {
     }
 }
 
-/// 상태 줄 우선순위: 권한 없음 → 설정 파일 오류 → 등록 실패 → 정상(단축키 요약).
+/// 메뉴 막대 아이콘 옆에 문구를 잠깐 띄운다. 상태 줄은 메뉴를 열어야 보이므로, 키를 누른 순간의 알림은 이 제목이 맡는다.
+pub fn flash(app: &AppHandle, text: &str) {
+    let seq = FLASH_SEQ.fetch_add(1, Ordering::SeqCst) + 1;
+    if let Some(tray) = app.tray_by_id(TRAY_ID) {
+        let _ = tray.set_title(Some(text));
+    }
+    let handle = app.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(FLASH_DURATION);
+        let main = handle.clone();
+        let _ = handle.run_on_main_thread(move || {
+            // 그 사이 새 문구가 떴다면 지우지 않는다.
+            if FLASH_SEQ.load(Ordering::SeqCst) != seq {
+                return;
+            }
+            if let Some(tray) = main.tray_by_id(TRAY_ID) {
+                let _ = tray.set_title(None::<&str>);
+            }
+        });
+    });
+}
+
+/// 상태 줄 우선순위: 권한 없음 → 설정 파일 오류 → 등록 실패 → 마지막 실행 실패 → 정상(단축키 요약).
 fn status_text(app: &AppHandle) -> String {
     if !layout_macos::permission::is_trusted() {
         return crate::i18n::t(Msg::NeedsPermission).into();
@@ -149,6 +176,9 @@ fn status_text(app: &AppHandle) -> String {
             let keys: Vec<&str> = failures.iter().map(|f| f.shortcut.as_str()).collect();
             return format!("{}: {}", crate::i18n::t(Msg::HotkeyFailed), keys.join(", "));
         }
+    }
+    if let Some(msg) = app.state::<crate::actions::ActionState>().last_failure() {
+        return crate::actions::failure_label(msg);
     }
     let s = settings.current();
     let summary: Vec<String> = s

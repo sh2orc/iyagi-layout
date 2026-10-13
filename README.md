@@ -44,7 +44,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 ## Download
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download IYAGI Layout for macOS (Apple Silicon)">
   </a>
 </p>
@@ -52,7 +52,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
 | Platform | File | Size | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.0_aarch64.dmg`](https://raw.githubusercontent.com/sh2orc/iyagi-layout/main/releases/IYAGI.Layout_0.1.0_aarch64.dmg) | 9 MB | `a2998196ec2e2caefcadeca17e27b8493a05183d472a2bebdc6301925eaed341` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.1_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg) | 9 MB | `2fe34193a8525e20b82231af913726b19c030a6e16cdbd5c691890d9126deade` |
 
 <details>
 <summary>Signing & trust on macOS</summary>
@@ -60,8 +60,9 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 The build is signed with a Developer ID, notarized, and the ticket is stapled to both the app and
 the DMG, so it opens without Gatekeeper warnings — `spctl` reports `source=Notarized Developer ID`.
 
-The published SHA-256 travels in the same repository as the DMG, so it detects transport
-corruption, not a compromise of the repository itself — see [releases/README.md](releases/README.md).
+The published SHA-256 (in the GitHub release notes) detects transport corruption, not a
+compromise of the release itself. macOS checks the stapled notarization ticket on its own,
+independent of GitHub — see [releases/README.md](releases/README.md).
 </details>
 
 ## Why IYAGI Layout
@@ -72,7 +73,10 @@ corruption, not a compromise of the repository itself — see [releases/README.m
   for is Accessibility. Global shortcuts use the Carbon hotkey API, so it never installs an event
   tap and cannot slow down your keyboard.
 - **Honest about state.** The menu-bar status line tells you when permission is missing, the
-  settings file is broken, or a shortcut could not be registered. Launch-at-login is read from the
+  settings file is broken, or a shortcut could not be registered. When a shortcut cannot move a
+  window (full-screen, no focused window, or IYAGI Layout's own window), a warning appears next to
+  the menu-bar icon for three seconds, and the status line keeps the last failure. Launch-at-login
+  is read from the
   OS every time instead of being remembered by the app.
 - **Fits the machine you have.** Tile math uses the screen's usable area (below the menu bar and
   notch, beside the Dock), re-read on every key press, so plugging a monitor in or out just works.
@@ -102,7 +106,7 @@ corruption, not a compromise of the repository itself — see [releases/README.m
   Login Items, survives moving the app, and its status (on / off / waiting for approval) is read
   back from macOS. A login-time launch stays quiet in the menu bar; a manual launch opens settings
 - Menu-bar status line: Accessibility needed → settings-file error → shortcut registration failure
-  → otherwise your current shortcuts
+  → last failed shortcut action → otherwise your current shortcuts
 
 **Settings & appearance**
 
@@ -223,10 +227,14 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 
 ## Status & Roadmap
 
+v0.1.1 — **Retry after app switches.** A shortcut pressed right after switching apps waits up to
+1.5 s for macOS to settle focus, and a menu-bar warning explains when a shortcut cannot move a
+window. The DMG is on the [v0.1.1 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.1).
+
 v0.1.0 — **MVP working.** Four-direction snapping, follow-up split, settings window, launch at
 login and four languages run on macOS 26; the notarized build installs from `/Applications` or the DMG.
 
-- **Next:** QA across more apps and monitor layouts, a GitHub-hosted release download
+- **Next:** QA across more apps and monitor layouts
 - **Later:** maximize / restore / center, quarter shortcuts, move to the adjacent monitor,
   optional edge-drag snapping
 
