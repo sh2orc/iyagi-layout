@@ -1,10 +1,10 @@
 """Generate app icons (PNG/ICNS) from src-tauri/icons/source/layout.png (placeholders when absent)
-and the menu-bar template icon.
+and the menu-bar icon.
 
 The brand artwork lives in icons/source/layout.png; the formats and sizes match
-tauri.conf.json so `cargo build` works from a fresh clone. The tray icon is a macOS
-*template* image (black shape on transparent background) — the system recolors it for
-light/dark menu bars — drawn as a window split into two halves.
+tauri.conf.json so `cargo build` works from a fresh clone. The menu-bar icon is the app icon
+at 36 px (tray-app@2x.png) in full colour. It is not a macOS *template* image, so the artwork
+keeps its colours instead of becoming a flat silhouette.
 """
 import struct
 import zlib
@@ -52,24 +52,6 @@ def app_icon_pixel(size: int):
     return pixel
 
 
-def tray_pixel(size: int):
-    """Template image: window outline split vertically; alpha carries the shape."""
-    s = size / 22.0  # design at 22pt
-    stroke = max(1, round(1.5 * s))
-    x0, y0 = round(3 * s), round(5 * s)
-    x1, y1 = round(19 * s), round(17 * s)
-    mid = (x0 + x1) // 2
-
-    def pixel(x, y):
-        on = False
-        if x0 <= x < x1 and y0 <= y < y1:
-            edge = x < x0 + stroke or x >= x1 - stroke or y < y0 + stroke or y >= y1 - stroke
-            divider = abs(x - mid) < stroke
-            on = edge or divider
-        return (0, 0, 0, 255) if on else (0, 0, 0, 0)
-    return pixel
-
-
 def write_icns(path: Path):
     def chunk(tag: bytes, data: bytes) -> bytes:
         return tag + struct.pack(">I", len(data) + 8) + data
@@ -95,6 +77,8 @@ def resize_from_source():
     converter = Path(__file__).resolve().parent / "png_rgba.swift"
     for size, name in [(32, "32x32.png"), (128, "128x128.png"), (256, "128x128@2x.png"), (512, "icon.png")]:
         subprocess.run(["swift", str(converter), str(SOURCE), str(OUT / name), str(size), "--squircle"], check=True)
+    # 메뉴 막대 아이콘: 같은 원본을 36px(18pt @2x)로. 템플릿이 아니라 컬러 그대로 쓴다.
+    subprocess.run(["swift", str(converter), str(SOURCE), str(OUT / "tray-app@2x.png"), "36", "--squircle"], check=True)
     with tempfile.TemporaryDirectory() as tmp:
         iconset = Path(tmp) / "app.iconset"
         iconset.mkdir()
@@ -116,8 +100,7 @@ def main():
         for size, name in [(32, "32x32.png"), (128, "128x128.png"), (256, "128x128@2x.png"), (512, "icon.png")]:
             write_png_rgba(OUT / name, size, app_icon_pixel(size))
         write_icns(OUT / "icon.icns")
-    write_png_rgba(OUT / "tray-template.png", 22, tray_pixel(22))
-    write_png_rgba(OUT / "tray-template@2x.png", 44, tray_pixel(44))
+        write_png_rgba(OUT / "tray-app@2x.png", 36, app_icon_pixel(36))
     print(f"wrote icons to {OUT}")
 
 

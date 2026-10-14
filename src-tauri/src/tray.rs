@@ -89,8 +89,9 @@ pub fn setup(app: &App) -> tauri::Result<()> {
     }))));
 
     TrayIconBuilder::with_id(TRAY_ID)
-        .icon(tauri::include_image!("icons/tray-template@2x.png"))
-        .icon_as_template(true)
+        // 앱 아이콘을 컬러 그대로 쓴다. 템플릿으로 두면 알파만 남아 단색 실루엣이 된다.
+        .icon(tauri::include_image!("icons/tray-app@2x.png"))
+        .icon_as_template(false)
         .tooltip("IYAGI Layout")
         .menu(&menu)
         .show_menu_on_left_click(true)
