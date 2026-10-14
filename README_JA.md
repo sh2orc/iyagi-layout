@@ -44,7 +44,7 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 ## ダウンロード
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon)をダウンロード">
   </a>
 </p>
@@ -52,7 +52,7 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 
 | プラットフォーム | ファイル | サイズ | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.1_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg) | 9 MB | `2fe34193a8525e20b82231af913726b19c030a6e16cdbd5c691890d9126deade` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.2_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg) | 9 MB | `74cb388b78e785cd1525f3291a319271c69eb5bdd5c5a68053e188777dc2a552` |
 
 <details>
 <summary>macOS の署名と信頼性</summary>
@@ -220,6 +220,8 @@ PNG/ICNS 一式を作り、`scripts/build-icon-assets.sh` が Icon Composer ア�
 | [docs/media/intro/](docs/media/intro/) | 30 秒紹介動画のソース(`intro.html` + `render.mjs`、再生成: `node docs/media/intro/render.mjs`) |
 
 ## ステータスとロードマップ
+
+v0.1.2 — **メニューバーに隠す。** 設定ウインドウの赤いボタンはウインドウだけを隠し、アプリはメニューバーに残ります。メニューバーのアイコンにはアプリのアイコンを使います。DMG は [v0.1.2 リリース](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.2) から入手できます。
 
 v0.1.1 — **アプリ切り替え直後の再試行。** アプリを切り替えた直後に押したショートカットは、macOS がフォーカスを決めるまで最大 1.5 秒待ち、ウインドウを動かせないときはメニューバーに警告を出します。DMG は [v0.1.1 リリース](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.1) から入手できます。
 

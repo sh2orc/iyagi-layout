@@ -41,7 +41,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 ## 下载
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="下载适用于 macOS(Apple Silicon)的 IYAGI Layout">
   </a>
 </p>
@@ -49,7 +49,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 
 | 平台 | 文件 | 大小 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.1_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg) | 9 MB | `2fe34193a8525e20b82231af913726b19c030a6e16cdbd5c691890d9126deade` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.2_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg) | 9 MB | `74cb388b78e785cd1525f3291a319271c69eb5bdd5c5a68053e188777dc2a552` |
 
 <details>
 <summary>macOS 签名与信任</summary>
@@ -205,6 +205,8 @@ cargo run -p layout-probe -- left --gap 8   # 试着贴合
 | [docs/media/intro/](docs/media/intro/) | 30 秒介绍视频的源码(`intro.html` + `render.mjs`，重新渲染：`node docs/media/intro/render.mjs`) |
 
 ## 状态与路线图
+
+v0.1.2 —— **隐藏到菜单栏。** 设置窗口中的红色按钮现在只隐藏窗口，应用继续留在菜单栏；菜单栏图标改用应用图标。DMG 可从 [v0.1.2 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.2) 下载。
 
 v0.1.1 —— **切换应用后重试。** 切换应用后立即按下的快捷键会等待最长 1.5 秒，直到 macOS 确定焦点；无法移动窗口时，菜单栏会显示警告。DMG 可从 [v0.1.1 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.1) 下载。
 

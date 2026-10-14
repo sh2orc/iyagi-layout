@@ -44,7 +44,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 ## Download
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download IYAGI Layout for macOS (Apple Silicon)">
   </a>
 </p>
@@ -52,7 +52,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
 | Platform | File | Size | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.1_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.1/IYAGI.Layout_0.1.1_aarch64.dmg) | 9 MB | `2fe34193a8525e20b82231af913726b19c030a6e16cdbd5c691890d9126deade` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.2_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg) | 9 MB | `74cb388b78e785cd1525f3291a319271c69eb5bdd5c5a68053e188777dc2a552` |
 
 <details>
 <summary>Signing & trust on macOS</summary>
@@ -226,6 +226,8 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 | [docs/media/intro/](docs/media/intro/) | Source of the 30-second intro (`intro.html` + `render.mjs`; re-render with `node docs/media/intro/render.mjs`) |
 
 ## Status & Roadmap
+
+v0.1.2 — **Hide to menu bar.** The red button in the settings window now hides the window and keeps the app in the menu bar, and the menu-bar icon shows the app icon. The DMG is on the [v0.1.2 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.2).
 
 v0.1.1 — **Retry after app switches.** A shortcut pressed right after switching apps waits up to
 1.5 s for macOS to settle focus, and a menu-bar warning explains when a shortcut cannot move a
