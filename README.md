@@ -44,7 +44,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 ## Download
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download IYAGI Layout for macOS (Apple Silicon)">
   </a>
 </p>
@@ -52,7 +52,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
 | Platform | File | Size | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.2_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg) | 9 MB | `74cb388b78e785cd1525f3291a319271c69eb5bdd5c5a68053e188777dc2a552` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.3_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg) | 9 MB | `e0f304822895c625bfd450bd6fe38e06aaa60598bbf75894369f980554f21a9f` |
 
 <details>
 <summary>Signing & trust on macOS</summary>
@@ -226,6 +226,8 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 | [docs/media/intro/](docs/media/intro/) | Source of the 30-second intro (`intro.html` + `render.mjs`; re-render with `node docs/media/intro/render.mjs`) |
 
 ## Status & Roadmap
+
+v0.1.3 — **Chrome fix.** Shortcuts now move Chrome windows when Chrome is the frontmost app. Chrome does not always report a focused application to macOS, so IYAGI Layout falls back to the frontmost app. The DMG is on the [v0.1.3 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.3).
 
 v0.1.2 — **Hide to menu bar.** The red button in the settings window now hides the window and keeps the app in the menu bar, and the menu-bar icon shows the app icon. The DMG is on the [v0.1.2 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.2).
 

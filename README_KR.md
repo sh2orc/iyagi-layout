@@ -43,7 +43,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 ## 다운로드
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon) 다운로드">
   </a>
 </p>
@@ -51,7 +51,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 
 | 플랫폼 | 파일 | 크기 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.2_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.2/IYAGI.Layout_0.1.2_aarch64.dmg) | 9 MB | `74cb388b78e785cd1525f3291a319271c69eb5bdd5c5a68053e188777dc2a552` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.3_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg) | 9 MB | `e0f304822895c625bfd450bd6fe38e06aaa60598bbf75894369f980554f21a9f` |
 
 <details>
 <summary>macOS 서명과 신뢰</summary>
@@ -218,6 +218,8 @@ PNG/ICNS 세트를 만들고 `scripts/build-icon-assets.sh`가 Icon Composer 에
 | [docs/media/intro/](docs/media/intro/) | 30초 소개 영상 소스(`intro.html` + `render.mjs`, 다시 만들기: `node docs/media/intro/render.mjs`) |
 
 ## 상태와 로드맵
+
+v0.1.3 — **Chrome 포커스 수정.** Chrome이 최전면일 때도 단축키로 창을 옮길 수 있습니다. Chrome은 macOS에 포커스된 앱을 항상 알려 주지 않아서, 최전면 앱에서 창을 찾도록 바꿨습니다. DMG는 [v0.1.3 릴리스](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.3)에서 받을 수 있습니다.
 
 v0.1.2 — **메뉴 막대로 숨기기.** 설정 창의 빨간 버튼은 이제 창만 숨기고 앱은 메뉴 막대에 남으며, 메뉴 막대 아이콘에 앱 아이콘을 씁니다. DMG는 [v0.1.2 릴리스](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.2)에서 받을 수 있습니다.
 
