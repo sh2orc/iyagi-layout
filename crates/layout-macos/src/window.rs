@@ -16,15 +16,24 @@ pub struct WindowHandle {
     pub bundle_id: Option<String>,
 }
 
-/// 포커스 창: 최전면 앱의 AXFocusedWindow → 첫 AXWindows → 전역 포커스 요소의 AXWindow.
+/// 포커스 창: 포커스 앱의 AXFocusedWindow → 첫 AXWindows → 전역 포커스 요소의 AXWindow.
+/// 포커스 앱은 시스템 전역 값을 먼저 보고, 그 값이 비면(크롬은 최전면인데도 비는 경우가 있다)
+/// NSWorkspace의 최전면 앱으로 넘어간다.
 pub fn focused() -> Result<Option<WindowHandle>, AxError> {
     if !crate::permission::is_trusted() {
         return Err(AxError::NotTrusted);
     }
     // SAFETY: 인자 없는 생성.
     let system = unsafe { AXUIElement::new_system_wide() };
-    let Some(app) = ax::attr_element(&system, ax::FOCUSED_APPLICATION)? else {
-        return Ok(None);
+    let app = match ax::attr_element(&system, ax::FOCUSED_APPLICATION) {
+        Ok(Some(app)) => app,
+        _ => match frontmost_app() {
+            Some(app) => {
+                tracing::debug!("no system-wide focused app — using the frontmost app");
+                app
+            }
+            None => return Ok(None),
+        },
     };
     let pid = ax::pid_of(&app)?;
     let element = match ax::attr_element(&app, ax::FOCUSED_WINDOW)? {
@@ -63,6 +72,15 @@ pub fn frontmost_bundle_id() -> Option<String> {
         .frontmostApplication()
         .and_then(|a| a.bundleIdentifier())
         .map(|s| s.to_string())
+}
+
+/// 최전면 앱의 AX 요소. NSWorkspace의 값은 앱 런루프에서 최신이다.
+fn frontmost_app() -> Option<CFRetained<AXUIElement>> {
+    let pid = NSWorkspace::sharedWorkspace()
+        .frontmostApplication()?
+        .processIdentifier();
+    // SAFETY: 살아 있는 최전면 앱의 PID로 만든 요소다.
+    Some(unsafe { AXUIElement::new_application(pid) })
 }
 
 impl WindowHandle {
