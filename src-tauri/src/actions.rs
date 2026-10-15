@@ -51,7 +51,8 @@ fn attempt(app: &AppHandle, action: Action, started: Instant, tries: u32) {
         } else {
             tracing::warn!("accessibility permission missing — key ignored");
         }
-        crate::tray::refresh_status(app);
+        let handle = app.clone();
+        let _ = app.run_on_main_thread(move || crate::tray::refresh_status(&handle));
         return;
     }
 
@@ -172,8 +173,12 @@ fn fail(app: &AppHandle, msg: Msg) {
         .last_failure
         .lock()
         .expect("failure lock") = Some(msg);
-    crate::tray::refresh_status(app);
-    crate::tray::flash(app, &failure_label(msg));
+    // 단축키 핸들러(Carbon) 안에서 메뉴·트레이를 바로 건드리지 않고 다음 루프에서 갱신한다.
+    let handle = app.clone();
+    let _ = app.run_on_main_thread(move || {
+        crate::tray::refresh_status(&handle);
+        crate::tray::flash(&handle, &failure_label(msg));
+    });
 }
 
 /// 성공하면 이전 실패 문구를 지운다.
@@ -186,6 +191,7 @@ fn clear_failure(app: &AppHandle) {
         .take()
         .is_some();
     if cleared {
-        crate::tray::refresh_status(app);
+        let handle = app.clone();
+        let _ = app.run_on_main_thread(move || crate::tray::refresh_status(&handle));
     }
 }

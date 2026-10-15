@@ -280,9 +280,23 @@ extern "C" fn handler(_call: EventHandlerCallRef, event: EventRef, _user: *mut c
     // 잠금 밖에서 호출할 수 없으므로, 콜백은 짧게 끝나야 한다.
     let guard = REGISTRY.lock().expect("hotkey registry");
     if let Some(cb) = guard.as_ref().and_then(|r| r.callbacks.get(&hot_key_id.id)) {
-        cb();
+        invoke_guarded(cb);
     }
     0
+}
+
+/// 콜백을 호출하되 Rust panic과 Objective-C 예외가 C 경계(Carbon 핸들러)를 넘지 못하게 막는다.
+/// 넘으면 "panic in a function that cannot unwind"로 프로세스가 abort된다.
+fn invoke_guarded(cb: &Callback) {
+    use std::panic::{catch_unwind, AssertUnwindSafe};
+    let outcome = catch_unwind(AssertUnwindSafe(|| {
+        objc2::exception::catch(AssertUnwindSafe(|| cb()))
+    }));
+    match outcome {
+        Ok(Ok(())) => {}
+        Ok(Err(exception)) => tracing::error!(?exception, "hotkey callback raised an Objective-C exception"),
+        Err(_) => tracing::error!("hotkey callback panicked"),
+    }
 }
 
 fn install_handler() -> Result<(), HotkeyError> {
