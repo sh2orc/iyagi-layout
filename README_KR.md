@@ -43,7 +43,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 ## 다운로드
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon) 다운로드">
   </a>
 </p>
@@ -51,7 +51,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 
 | 플랫폼 | 파일 | 크기 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.4_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg) | 9 MB | `4584c5f921b201398354a05ea0704c07af6466ce496d39bc77a9d522ade7693e` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.5_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg) | 9 MB | `ab984793d234fdb95d62d52d3303d1d440e59e0a91d6c29ad1809ce2badab55a` |
 
 <details>
 <summary>macOS 서명과 신뢰</summary>
@@ -218,6 +218,8 @@ PNG/ICNS 세트를 만들고 `scripts/build-icon-assets.sh`가 Icon Composer 에
 | [docs/media/intro/](docs/media/intro/) | 30초 소개 영상 소스(`intro.html` + `render.mjs`, 다시 만들기: `node docs/media/intro/render.mjs`) |
 
 ## 상태와 로드맵
+
+v0.1.5 â **ì¤ì  ì°½ ëì´ë¥¼ ë´ì©ì ë§ì¶¤.** ì±ì ì´ìì ë íë¨ ë²í¼ì´ ìë¦¬ì§ ìëë¡ ì¤ì  ì°½ ëì´ë¥¼ ë´ì©ì ë§ì¶¥ëë¤. ìì¡´ì±ì ìµì ì¼ë¡ ì¬ë ¸ìµëë¤(React 19, Vite 8, TypeScript 7). `npm audit`ì ì·¨ì½ì ì´ ììµëë¤. ì ê¸ì´ ì¤ì¼ë¼ë í¨ëíì§ ìê³  ë³µêµ¬í©ëë¤. DMGë [v0.1.5 ë¦´ë¦¬ì¤](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5)ì ììµëë¤.
 
 v0.1.4 — **macOS 14 충돌 수정.** macOS 14.0–14.3에는 `NSScreen.CGDirectDisplayID`가 없어서 단축키를 누르면 앱이 중단됐습니다. 이제 화면 ID를 `NSScreenNumber`에서 읽고, 단축키 콜백은 panic과 Objective-C 예외를 잡습니다. DMG는 [v0.1.4 릴리스](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4)에서 받을 수 있습니다.
 

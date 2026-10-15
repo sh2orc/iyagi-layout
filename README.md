@@ -44,7 +44,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 ## Download
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download IYAGI Layout for macOS (Apple Silicon)">
   </a>
 </p>
@@ -52,7 +52,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
 | Platform | File | Size | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.4_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg) | 9 MB | `4584c5f921b201398354a05ea0704c07af6466ce496d39bc77a9d522ade7693e` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.5_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg) | 9 MB | `ab984793d234fdb95d62d52d3303d1d440e59e0a91d6c29ad1809ce2badab55a` |
 
 <details>
 <summary>Signing & trust on macOS</summary>
@@ -226,6 +226,8 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 | [docs/media/intro/](docs/media/intro/) | Source of the 30-second intro (`intro.html` + `render.mjs`; re-render with `node docs/media/intro/render.mjs`) |
 
 ## Status & Roadmap
+
+v0.1.5 â **Settings window fits its content.** The bottom buttons no longer get cut off when the app opens. Dependencies are updated (React 19, Vite 8, TypeScript 7) and `npm audit` reports no issues. A poisoned internal lock now recovers instead of panicking. The DMG is on the [v0.1.5 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5).
 
 v0.1.4 — **Crash fix on macOS 14.** Shortcuts no longer abort the app on macOS 14.0–14.3, where `NSScreen.CGDirectDisplayID` does not exist. Screen IDs now come from `NSScreenNumber`, and hotkey callbacks catch panics and Objective-C exceptions. The DMG is on the [v0.1.4 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4).
 

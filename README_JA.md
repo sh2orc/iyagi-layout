@@ -44,7 +44,7 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 ## ダウンロード
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon)をダウンロード">
   </a>
 </p>
@@ -52,7 +52,7 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 
 | プラットフォーム | ファイル | サイズ | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.4_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg) | 9 MB | `4584c5f921b201398354a05ea0704c07af6466ce496d39bc77a9d522ade7693e` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.5_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg) | 9 MB | `ab984793d234fdb95d62d52d3303d1d440e59e0a91d6c29ad1809ce2badab55a` |
 
 <details>
 <summary>macOS の署名と信頼性</summary>
@@ -220,6 +220,8 @@ PNG/ICNS 一式を作り、`scripts/build-icon-assets.sh` が Icon Composer ア�
 | [docs/media/intro/](docs/media/intro/) | 30 秒紹介動画のソース(`intro.html` + `render.mjs`、再生成: `node docs/media/intro/render.mjs`) |
 
 ## ステータスとロードマップ
+
+v0.1.5 â **è¨­å®ã¦ã¤ã³ãã¦ã®é«ããåå®¹ã«åããã** ã¢ããªãéããã¨ãä¸é¨ã®ãã¿ã³ãåããªããããé«ããåå®¹ã«åããã¾ããä¾å­é¢ä¿ãææ°ã«ãã¾ãã(React 19ãVite 8ãTypeScript 7)ã`npm audit` ã«åé¡ã¯ããã¾ãããã­ãã¯ãæ±æããã¦ããããã¯ããåå¾©ãã¾ããDMG ã¯ [v0.1.5 ãªãªã¼ã¹](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5) ã«ããã¾ãã
 
 v0.1.4 — **macOS 14 のクラッシュ修正。** macOS 14.0–14.3 には `NSScreen.CGDirectDisplayID` がなく、ショートカットを押すとアプリが中断していました。画面 ID は `NSScreenNumber` から読むようになり、ショートカットのコールバックは panic と Objective-C 例外を捕捉します。DMG は [v0.1.4 リリース](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4) から入手できます。
 
