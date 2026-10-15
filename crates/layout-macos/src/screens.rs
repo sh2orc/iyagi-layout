@@ -17,7 +17,8 @@ fn rect(r: objc2_foundation::NSRect) -> Rect {
 /// unrecognized selector 예외) 오래된 `deviceDescription["NSScreenNumber"]`를 읽는다.
 fn display_id(screen: &NSScreen) -> u32 {
     let description = screen.deviceDescription();
-    let number: Option<Retained<AnyObject>> = description.objectForKey(ns_string!("NSScreenNumber"));
+    let number: Option<Retained<AnyObject>> =
+        description.objectForKey(ns_string!("NSScreenNumber"));
     // SAFETY: NSScreenNumber 값은 NSNumber이고 unsignedIntValue에 응답한다.
     number.map_or(0, |n| unsafe { msg_send![&*n, unsignedIntValue] })
 }

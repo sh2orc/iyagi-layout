@@ -290,11 +290,14 @@ extern "C" fn handler(_call: EventHandlerCallRef, event: EventRef, _user: *mut c
 fn invoke_guarded(cb: &Callback) {
     use std::panic::{catch_unwind, AssertUnwindSafe};
     let outcome = catch_unwind(AssertUnwindSafe(|| {
-        objc2::exception::catch(AssertUnwindSafe(|| cb()))
+        objc2::exception::catch(AssertUnwindSafe(cb))
     }));
     match outcome {
         Ok(Ok(())) => {}
-        Ok(Err(exception)) => tracing::error!(?exception, "hotkey callback raised an Objective-C exception"),
+        Ok(Err(exception)) => tracing::error!(
+            ?exception,
+            "hotkey callback raised an Objective-C exception"
+        ),
         Err(_) => tracing::error!("hotkey callback panicked"),
     }
 }
