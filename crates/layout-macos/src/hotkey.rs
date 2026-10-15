@@ -278,7 +278,9 @@ extern "C" fn handler(_call: EventHandlerCallRef, event: EventRef, _user: *mut c
     }
     // 콜백을 꺼내는 동안만 잠근다 — 콜백 안에서 재등록해도 교착하지 않게 복제하지 않고
     // 잠금 밖에서 호출할 수 없으므로, 콜백은 짧게 끝나야 한다.
-    let guard = REGISTRY.lock().expect("hotkey registry");
+    let guard = REGISTRY
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     if let Some(cb) = guard.as_ref().and_then(|r| r.callbacks.get(&hot_key_id.id)) {
         invoke_guarded(cb);
     }
@@ -347,7 +349,9 @@ pub fn register(
     ensure_main_thread()?;
     install_handler()?;
     let parsed = parse(spec)?;
-    let mut guard = REGISTRY.lock().expect("hotkey registry");
+    let mut guard = REGISTRY
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     let registry = guard.get_or_insert_with(|| Registry {
         callbacks: HashMap::new(),
         refs: Vec::new(),
@@ -383,7 +387,9 @@ pub fn unregister_all() {
     if ensure_main_thread().is_err() {
         return;
     }
-    let mut guard = REGISTRY.lock().expect("hotkey registry");
+    let mut guard = REGISTRY
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     if let Some(registry) = guard.as_mut() {
         for r in registry.refs.drain(..) {
             // SAFETY: register가 돌려준 유효한 참조를 한 번만 해제한다.

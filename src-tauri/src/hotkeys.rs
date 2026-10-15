@@ -22,7 +22,10 @@ pub struct HotkeyFailure {
 
 impl HotkeyState {
     pub fn failures(&self) -> Vec<HotkeyFailure> {
-        self.failures.lock().expect("hotkey lock").clone()
+        self.failures
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .clone()
     }
 }
 
@@ -60,7 +63,7 @@ pub fn apply(app: &AppHandle, settings: &Settings) {
     *app.state::<HotkeyState>()
         .failures
         .lock()
-        .expect("hotkey lock") = failures;
+        .unwrap_or_else(std::sync::PoisonError::into_inner) = failures;
 }
 
 pub fn unregister_all(_app: &AppHandle) {

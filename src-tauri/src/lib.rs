@@ -35,6 +35,7 @@ pub fn run() {
             window::app_info,
             window::open_log_dir,
             window::hide_settings,
+            window::fit_settings_height,
             system::status_get,
             system::permission_prompt,
             system::open_accessibility_settings,

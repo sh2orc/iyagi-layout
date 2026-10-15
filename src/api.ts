@@ -51,6 +51,7 @@ export const openAccessibilitySettings = () => invoke<void>("open_accessibility_
 export const loginItemSet = (enabled: boolean) => invoke<Status>("login_item_set", { enabled });
 export const openLoginItemsSettings = () => invoke<void>("open_login_items_settings");
 export const hideSettings = () => invoke<void>("hide_settings");
+export const fitSettingsHeight = (height: number) => invoke<void>("fit_settings_height", { height });
 export const shortcutValidate = (spec: string) => invoke<string>("shortcut_validate", { spec });
 
 export const onSettingsChanged = (handler: (s: Settings) => void): Promise<UnlistenFn> =>

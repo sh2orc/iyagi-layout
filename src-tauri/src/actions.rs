@@ -26,7 +26,10 @@ pub struct ActionState {
 
 impl ActionState {
     pub fn last_failure(&self) -> Option<Msg> {
-        *self.last_failure.lock().expect("failure lock")
+        *self
+            .last_failure
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
     }
 }
 
@@ -118,7 +121,7 @@ fn attempt(app: &AppHandle, action: Action, started: Instant, tries: u32) {
     let plan = state
         .cycle
         .lock()
-        .expect("cycle lock")
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
         .plan(action, &frame, started, rules);
     let (target, fraction) = match plan {
         Plan::FromScreen(fraction) => (
@@ -135,7 +138,7 @@ fn attempt(app: &AppHandle, action: Action, started: Instant, tries: u32) {
             state
                 .cycle
                 .lock()
-                .expect("cycle lock")
+                .unwrap_or_else(std::sync::PoisonError::into_inner)
                 .record(action, actual, fraction, started);
             clear_failure(app);
             tracing::info!(
@@ -172,7 +175,7 @@ fn fail(app: &AppHandle, msg: Msg) {
     *app.state::<ActionState>()
         .last_failure
         .lock()
-        .expect("failure lock") = Some(msg);
+        .unwrap_or_else(std::sync::PoisonError::into_inner) = Some(msg);
     // 단축키 핸들러(Carbon) 안에서 메뉴·트레이를 바로 건드리지 않고 다음 루프에서 갱신한다.
     let handle = app.clone();
     let _ = app.run_on_main_thread(move || {
@@ -187,7 +190,7 @@ fn clear_failure(app: &AppHandle) {
         .state::<ActionState>()
         .last_failure
         .lock()
-        .expect("failure lock")
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
         .take()
         .is_some();
     if cleared {

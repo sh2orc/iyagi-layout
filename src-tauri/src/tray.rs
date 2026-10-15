@@ -131,7 +131,10 @@ pub fn refresh_status(app: &AppHandle) {
     let Some(state) = app.try_state::<TrayState>() else {
         return;
     };
-    let guard = state.0.lock().expect("tray lock");
+    let guard = state
+        .0
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     if let Some(h) = guard.as_ref() {
         let _ = h.status.set_text(status_text(app));
         let _ = h

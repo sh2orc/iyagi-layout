@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  appInfo, hideSettings, loginItemSet, onSettingsChanged, openAccessibilitySettings, openLogDir, openLoginItemsSettings,
+  appInfo, fitSettingsHeight, hideSettings, loginItemSet, onSettingsChanged, openAccessibilitySettings, openLogDir, openLoginItemsSettings,
   permissionPrompt, settingsGet, settingsSet, statusGet,
   type ActionKey, type AppInfo, type Settings, type Status,
 } from "./api";
@@ -33,6 +33,27 @@ export function App() {
   const t = makeT(lang);
 
   const refreshStatus = useCallback(() => statusGet().then(setStatus), []);
+  const pageRef = useRef<HTMLElement>(null);
+  const loaded = draft !== null;
+
+  // 창 높이를 내용에 맞춘다. 하단 버튼이 잘리지 않게 하고, 언어나 메시지가 바뀌어 높이가 변해도 따라간다.
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page) return;
+    // 마지막 자식의 아래쪽 + 아래 여백(.page padding 24px)을 기준으로 한다.
+    // scrollHeight는 창 높이 아래로 줄지 않으므로 쓰지 않는다.
+    const fit = () => {
+      const last = page.lastElementChild;
+      const contentBottom = last ? last.getBoundingClientRect().bottom : 0;
+      // 여백을 63px(기존 48 + 15) 둬서 하단 버튼이 잘리지 않게 한다.
+      const height = Math.max(page.offsetHeight, Math.ceil(contentBottom) + 63);
+      void fitSettingsHeight(height).catch(() => undefined);
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(page);
+    return () => observer.disconnect();
+  }, [loaded]);
 
   useEffect(() => {
     void settingsGet().then((v) => {
@@ -58,7 +79,7 @@ export function App() {
     };
   }, [refreshStatus]);
 
-  if (!draft) return <main className="page">{t("loading")}</main>;
+  if (!draft) return <main className="page" ref={pageRef}>{t("loading")}</main>;
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
 
@@ -85,7 +106,7 @@ export function App() {
   const trusted = status?.accessibilityTrusted ?? false;
 
   return (
-    <main className="page">
+    <main className="page" ref={pageRef}>
       <header>
         <h1>IYAGI Layout</h1>
         <p className="muted">{t("subtitle")} {info ? `v${info.version}` : ""}</p>

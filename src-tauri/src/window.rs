@@ -26,6 +26,67 @@ pub fn show_settings(app: &AppHandle) {
     }
 }
 
+/// 설정 창 높이를 내용에 맞춘다(너비는 그대로). 화면보다 커지지 않게 작업 영역 안으로 자른다.
+#[tauri::command]
+pub fn fit_settings_height(app: AppHandle, height: f64) {
+    let Some(window) = app.get_webview_window(SETTINGS_LABEL) else {
+        return;
+    };
+    let Ok(scale) = window.scale_factor() else {
+        return;
+    };
+    let Ok(size) = window.inner_size() else {
+        return;
+    };
+    let width = f64::from(size.width) / scale;
+    let screen_height = window
+        .current_monitor()
+        .ok()
+        .flatten()
+        .map(|m| f64::from(m.size().height) / m.scale_factor());
+    let target = settings_height(height, screen_height);
+    let _ = window.set_size(tauri::LogicalSize::new(width, target));
+}
+
+/// 요청 높이를 최소 높이와 화면(메뉴 막대·Dock 여유 제외) 높이 사이로 자른다.
+/// 화면 높이를 모르면 위쪽 한계 없이 요청값을 따른다.
+fn settings_height(requested: f64, screen_height: Option<f64>) -> f64 {
+    let ceiling = screen_height
+        .map(|h| (h - MENU_BAR_AND_DOCK_ALLOWANCE).max(MIN_SETTINGS_HEIGHT))
+        .unwrap_or(f64::INFINITY);
+    requested.ceil().clamp(MIN_SETTINGS_HEIGHT, ceiling)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn height_is_rounded_up_within_bounds() {
+        assert_eq!(settings_height(700.2, None), 701.0);
+    }
+
+    #[test]
+    fn height_never_drops_below_the_minimum() {
+        assert_eq!(settings_height(100.0, Some(900.0)), MIN_SETTINGS_HEIGHT);
+    }
+
+    #[test]
+    fn height_stops_at_the_screen_minus_menu_bar_and_dock() {
+        assert_eq!(settings_height(1200.0, Some(900.0)), 780.0);
+    }
+
+    #[test]
+    fn tiny_screen_still_allows_the_minimum() {
+        assert_eq!(settings_height(900.0, Some(500.0)), MIN_SETTINGS_HEIGHT);
+    }
+}
+
+/// 메뉴 막대와 Dock이 차지하는 여유. 창이 화면 밖으로 나가지 않게 뺀다.
+const MENU_BAR_AND_DOCK_ALLOWANCE: f64 = 120.0;
+/// `min_inner_size`와 맞춘 최소 높이.
+const MIN_SETTINGS_HEIGHT: f64 = 560.0;
+
 /// 설정 창의 "메뉴 막대로 숨기기". 창의 빨간 닫기 버튼과 같다: 창만 숨기고 앱은 메뉴 막대에 남는다.
 #[tauri::command]
 pub fn hide_settings(app: AppHandle) {

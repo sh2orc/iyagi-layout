@@ -24,15 +24,27 @@ struct Inner {
 
 impl SettingsState {
     pub fn current(&self) -> Settings {
-        self.inner.lock().expect("settings lock").settings.clone()
+        self.inner
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .settings
+            .clone()
     }
 
     pub fn load_error(&self) -> Option<String> {
-        self.inner.lock().expect("settings lock").load_error.clone()
+        self.inner
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .load_error
+            .clone()
     }
 
     pub fn path(&self) -> Option<PathBuf> {
-        self.inner.lock().expect("settings lock").path.clone()
+        self.inner
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .path
+            .clone()
     }
 }
 
@@ -55,7 +67,10 @@ fn settings_file(app: &AppHandle) -> Option<PathBuf> {
 /// 기동 시 한 번: 파일이 없으면 기본값을 쓰고, 있으면 읽어 검증한다.
 pub fn load_into_state(app: &AppHandle) {
     let state = app.state::<SettingsState>();
-    let mut inner = state.inner.lock().expect("settings lock");
+    let mut inner = state
+        .inner
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     let Some(path) = settings_file(app) else {
         inner.load_error = Some("config directory unavailable".into());
         return;
@@ -100,7 +115,10 @@ pub fn apply(app: &AppHandle, settings: Settings) -> Result<Settings, String> {
     settings.validate().map_err(|e| e.to_string())?;
     let state = app.state::<SettingsState>();
     {
-        let mut inner = state.inner.lock().expect("settings lock");
+        let mut inner = state
+            .inner
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
         if let Some(path) = inner.path.clone() {
             write_file(&path, &settings)?;
         }
