@@ -44,7 +44,7 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 ## ダウンロード
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon)をダウンロード">
   </a>
 </p>
@@ -52,7 +52,7 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
 
 | プラットフォーム | ファイル | サイズ | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.3_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg) | 9 MB | `e0f304822895c625bfd450bd6fe38e06aaa60598bbf75894369f980554f21a9f` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.4_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg) | 9 MB | `4584c5f921b201398354a05ea0704c07af6466ce496d39bc77a9d522ade7693e` |
 
 <details>
 <summary>macOS の署名と信頼性</summary>
@@ -220,6 +220,8 @@ PNG/ICNS 一式を作り、`scripts/build-icon-assets.sh` が Icon Composer ア�
 | [docs/media/intro/](docs/media/intro/) | 30 秒紹介動画のソース(`intro.html` + `render.mjs`、再生成: `node docs/media/intro/render.mjs`) |
 
 ## ステータスとロードマップ
+
+v0.1.4 — **macOS 14 のクラッシュ修正。** macOS 14.0–14.3 には `NSScreen.CGDirectDisplayID` がなく、ショートカットを押すとアプリが中断していました。画面 ID は `NSScreenNumber` から読むようになり、ショートカットのコールバックは panic と Objective-C 例外を捕捉します。DMG は [v0.1.4 リリース](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4) から入手できます。
 
 v0.1.3 — **Chrome のフォーカス修正。** Chrome が最前面のときも、ショートカットでウインドウを動かせるようになりました。Chrome は状態によって macOS にフォーカス中のアプリを知らせないため、最前面のアプリからウインドウを探すようにしました。DMG は [v0.1.3 リリース](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.3) から入手できます。
 

@@ -41,7 +41,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 ## 下载
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="下载适用于 macOS(Apple Silicon)的 IYAGI Layout">
   </a>
 </p>
@@ -49,7 +49,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 
 | 平台 | 文件 | 大小 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.3_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg) | 9 MB | `e0f304822895c625bfd450bd6fe38e06aaa60598bbf75894369f980554f21a9f` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.4_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg) | 9 MB | `4584c5f921b201398354a05ea0704c07af6466ce496d39bc77a9d522ade7693e` |
 
 <details>
 <summary>macOS 签名与信任</summary>
@@ -205,6 +205,8 @@ cargo run -p layout-probe -- left --gap 8   # 试着贴合
 | [docs/media/intro/](docs/media/intro/) | 30 秒介绍视频的源码(`intro.html` + `render.mjs`，重新渲染：`node docs/media/intro/render.mjs`) |
 
 ## 状态与路线图
+
+v0.1.4 —— **修复 macOS 14 崩溃。** macOS 14.0–14.3 没有 `NSScreen.CGDirectDisplayID`，按下快捷键时应用会中止。现在屏幕 ID 从 `NSScreenNumber` 读取，快捷键回调会捕获 panic 和 Objective-C 异常。DMG 可从 [v0.1.4 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4) 下载。
 
 v0.1.3 —— **Chrome 焦点修复。** Chrome 位于最前时，快捷键也能移动窗口。Chrome 在某些状态下不会向 macOS 报告聚焦的应用，因此改为从最前面的应用查找窗口。DMG 可从 [v0.1.3 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.3) 下载。
 

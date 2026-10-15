@@ -44,7 +44,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 ## Download
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download IYAGI Layout for macOS (Apple Silicon)">
   </a>
 </p>
@@ -52,7 +52,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
 | Platform | File | Size | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.3_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.3/IYAGI.Layout_0.1.3_aarch64.dmg) | 9 MB | `e0f304822895c625bfd450bd6fe38e06aaa60598bbf75894369f980554f21a9f` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.4_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.4/IYAGI.Layout_0.1.4_aarch64.dmg) | 9 MB | `4584c5f921b201398354a05ea0704c07af6466ce496d39bc77a9d522ade7693e` |
 
 <details>
 <summary>Signing & trust on macOS</summary>
@@ -226,6 +226,8 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 | [docs/media/intro/](docs/media/intro/) | Source of the 30-second intro (`intro.html` + `render.mjs`; re-render with `node docs/media/intro/render.mjs`) |
 
 ## Status & Roadmap
+
+v0.1.4 — **Crash fix on macOS 14.** Shortcuts no longer abort the app on macOS 14.0–14.3, where `NSScreen.CGDirectDisplayID` does not exist. Screen IDs now come from `NSScreenNumber`, and hotkey callbacks catch panics and Objective-C exceptions. The DMG is on the [v0.1.4 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4).
 
 v0.1.3 — **Chrome fix.** Shortcuts now move Chrome windows when Chrome is the frontmost app. Chrome does not always report a focused application to macOS, so IYAGI Layout falls back to the frontmost app. The DMG is on the [v0.1.3 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.3).
 
