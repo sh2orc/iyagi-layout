@@ -47,6 +47,10 @@ Terminal と同じ署名・リリースの流れを使う Tauri 2 + Rust アプ�
   <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon)をダウンロード">
   </a>
+  <br>
+  <a href="https://www.buymeacoffee.com/sh2orc">
+    <img src="https://img.shields.io/badge/Buy_Me_a_Coffee-sh2orc-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000000" alt="sh2orcにコーヒーを奢る">
+  </a>
 </p>
 
 
@@ -221,7 +225,7 @@ PNG/ICNS 一式を作り、`scripts/build-icon-assets.sh` が Icon Composer ア�
 
 ## ステータスとロードマップ
 
-v0.1.5 â **è¨­å®ã¦ã¤ã³ãã¦ã®é«ããåå®¹ã«åããã** ã¢ããªãéããã¨ãä¸é¨ã®ãã¿ã³ãåããªããããé«ããåå®¹ã«åããã¾ããä¾å­é¢ä¿ãææ°ã«ãã¾ãã(React 19ãVite 8ãTypeScript 7)ã`npm audit` ã«åé¡ã¯ããã¾ãããã­ãã¯ãæ±æããã¦ããããã¯ããåå¾©ãã¾ããDMG ã¯ [v0.1.5 ãªãªã¼ã¹](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5) ã«ããã¾ãã
+v0.1.5 — **設定ウインドウの高さを内容に合わせ。** アプリを開いたとき下部のボタンが切れないよう、高さを内容に合わせます。依存関係を最新にしました(React 19、Vite 8、TypeScript 7)。`npm audit` に問題はありません。ロックが汚染されてもパニックせず回復します。DMG は [v0.1.5 リリース](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5) にあります。
 
 v0.1.4 — **macOS 14 のクラッシュ修正。** macOS 14.0–14.3 には `NSScreen.CGDirectDisplayID` がなく、ショートカットを押すとアプリが中断していました。画面 ID は `NSScreenNumber` から読むようになり、ショートカットのコールバックは panic と Objective-C 例外を捕捉します。DMG は [v0.1.4 リリース](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4) から入手できます。
 

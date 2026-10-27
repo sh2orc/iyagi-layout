@@ -46,6 +46,10 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
   <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon) 다운로드">
   </a>
+  <br>
+  <a href="https://www.buymeacoffee.com/sh2orc">
+    <img src="https://img.shields.io/badge/Buy_Me_a_Coffee-sh2orc-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000000" alt="sh2orc에게 커피 한 잔 사기">
+  </a>
 </p>
 
 
@@ -219,7 +223,7 @@ PNG/ICNS 세트를 만들고 `scripts/build-icon-assets.sh`가 Icon Composer 에
 
 ## 상태와 로드맵
 
-v0.1.5 â **ì¤ì  ì°½ ëì´ë¥¼ ë´ì©ì ë§ì¶¤.** ì±ì ì´ìì ë íë¨ ë²í¼ì´ ìë¦¬ì§ ìëë¡ ì¤ì  ì°½ ëì´ë¥¼ ë´ì©ì ë§ì¶¥ëë¤. ìì¡´ì±ì ìµì ì¼ë¡ ì¬ë ¸ìµëë¤(React 19, Vite 8, TypeScript 7). `npm audit`ì ì·¨ì½ì ì´ ììµëë¤. ì ê¸ì´ ì¤ì¼ë¼ë í¨ëíì§ ìê³  ë³µêµ¬í©ëë¤. DMGë [v0.1.5 ë¦´ë¦¬ì¤](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5)ì ììµëë¤.
+v0.1.5 — **설정 창 높이를 내용에 맞춤.** 앱을 열었을 때 하단 버튼이 잘리지 않도록 설정 창 높이를 내용에 맞춥니다. 의존성을 최신으로 올렸습니다(React 19, Vite 8, TypeScript 7). `npm audit`은 취약점이 없습니다. 잠금이 오염돼도 패닉하지 않고 복구합니다. DMG는 [v0.1.5 릴리스](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5)에 있습니다.
 
 v0.1.4 — **macOS 14 충돌 수정.** macOS 14.0–14.3에는 `NSScreen.CGDirectDisplayID`가 없어서 단축키를 누르면 앱이 중단됐습니다. 이제 화면 ID를 `NSScreenNumber`에서 읽고, 단축키 콜백은 panic과 Objective-C 예외를 잡습니다. DMG는 [v0.1.4 릴리스](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4)에서 받을 수 있습니다.
 

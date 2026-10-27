@@ -44,6 +44,10 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
   <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="下载适用于 macOS(Apple Silicon)的 IYAGI Layout">
   </a>
+  <br>
+  <a href="https://www.buymeacoffee.com/sh2orc">
+    <img src="https://img.shields.io/badge/Buy_Me_a_Coffee-sh2orc-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000000" alt="请 sh2orc 喝杯咖啡">
+  </a>
 </p>
 
 
@@ -206,7 +210,7 @@ cargo run -p layout-probe -- left --gap 8   # 试着贴合
 
 ## 状态与路线图
 
-v0.1.5 ââ **è®¾ç½®çªå£é«åº¦éåºåå®¹ã** æå¼åºç¨æ¶åºé¨æé®ä¸åè¢«æªæ­ãä¾èµå·²åçº§(React 19ãVite 8ãTypeScript 7)ï¼`npm audit` æ é®é¢ãåé¨éè¢«æ±¡ææ¶æ¹ä¸ºæ¢å¤ï¼ä¸å panicãDMG å¨ [v0.1.5 åå¸é¡µ](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5)ã
+v0.1.5 —— **设置窗口高度适应内容。** 打开应用时底部按钮不再被截断。依赖已升级(React 19、Vite 8、TypeScript 7)，`npm audit` 无问题。内部锁被污染时改为恢复，不再 panic。DMG 在 [v0.1.5 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5)。
 
 v0.1.4 —— **修复 macOS 14 崩溃。** macOS 14.0–14.3 没有 `NSScreen.CGDirectDisplayID`，按下快捷键时应用会中止。现在屏幕 ID 从 `NSScreenNumber` 读取，快捷键回调会捕获 panic 和 Objective-C 异常。DMG 可从 [v0.1.4 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4) 下载。
 

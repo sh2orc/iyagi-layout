@@ -47,6 +47,10 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
   <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download IYAGI Layout for macOS (Apple Silicon)">
   </a>
+  <br>
+  <a href="https://www.buymeacoffee.com/sh2orc">
+    <img src="https://img.shields.io/badge/Buy_Me_a_Coffee-sh2orc-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000000" alt="Buy sh2orc a coffee">
+  </a>
 </p>
 
 
@@ -227,7 +231,7 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 
 ## Status & Roadmap
 
-v0.1.5 â **Settings window fits its content.** The bottom buttons no longer get cut off when the app opens. Dependencies are updated (React 19, Vite 8, TypeScript 7) and `npm audit` reports no issues. A poisoned internal lock now recovers instead of panicking. The DMG is on the [v0.1.5 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5).
+v0.1.5 — **Settings window fits its content.** The bottom buttons no longer get cut off when the app opens. Dependencies are updated (React 19, Vite 8, TypeScript 7) and `npm audit` reports no issues. A poisoned internal lock now recovers instead of panicking. The DMG is on the [v0.1.5 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5).
 
 v0.1.4 — **Crash fix on macOS 14.** Shortcuts no longer abort the app on macOS 14.0–14.3, where `NSScreen.CGDirectDisplayID` does not exist. Screen IDs now come from `NSScreenNumber`, and hotkey callbacks catch panics and Objective-C exceptions. The DMG is on the [v0.1.4 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.4).
 
