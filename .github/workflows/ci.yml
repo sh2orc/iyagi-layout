@@ -39,9 +39,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - uses: actions/cache@v4
         with:
           key: macos-check-${{ github.ref }}-${{ hashFiles('Cargo.lock') }}
+          # 브랜치마다 키가 달라 콜드 스타트하지 않게 main의 캐시로 폴백한다.
+          restore-keys: |
+            macos-check-refs/heads/main-
           path: |
             ~/.cargo/registry/
             target/
