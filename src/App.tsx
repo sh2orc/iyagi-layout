@@ -218,6 +218,34 @@ export function App() {
       </section>
 
       <section>
+        <h2>{t("advancedTitle")}</h2>
+        <label className="row">
+          <span>{t("logLevelLabel")}</span>
+          <select
+            value={draft.log_level}
+            onChange={(e) => setDraft({ ...draft, log_level: e.target.value as Settings["log_level"] })}
+          >
+            {(["error", "warn", "info", "debug", "trace"] as const).map((level) => (
+              <option key={level} value={level}>{level}</option>
+            ))}
+          </select>
+        </label>
+        <label className="row">
+          <span>{t("policyLabel")}</span>
+          <select
+            value={draft.enhanced_ui_policy}
+            onChange={(e) => setDraft({ ...draft, enhanced_ui_policy: e.target.value as Settings["enhanced_ui_policy"] })}
+          >
+            <option value="automatic">{t("policyAutomatic")}</option>
+            <option value="disable_enable">{t("policyDisableEnable")}</option>
+            <option value="disable_only">{t("policyDisableOnly")}</option>
+            <option value="off">{t("policyOff")}</option>
+          </select>
+        </label>
+        <p className="muted">{t("advancedHelp")}</p>
+      </section>
+
+      <section>
         <h2>{t("loginTitle")}</h2>
         <div className="row">
           <span>{status ? t(LOGIN_LABEL[status.loginItem]) : "…"}</span>

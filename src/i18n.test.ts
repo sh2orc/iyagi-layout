@@ -23,7 +23,7 @@ describe("dictionaries", () => {
     const en = makeT("en");
     for (const lang of langs) {
       const t = makeT(lang);
-      for (const key of ["loading", "save", "hideToMenuBar", "hideHint", "recording", "chainLabel", "duplicateShortcut"] as const) {
+      for (const key of ["loading", "save", "hideToMenuBar", "hideHint", "recording", "chainLabel", "duplicateShortcut", "advancedTitle", "policyAutomatic"] as const) {
         expect(t(key).length).toBeGreaterThan(0);
       }
       expect(t("save")).not.toBe("");
