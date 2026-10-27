@@ -41,7 +41,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 ## 下载
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.6/IYAGI.Layout_0.1.6_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="下载适用于 macOS(Apple Silicon)的 IYAGI Layout">
   </a>
   <br>
@@ -53,7 +53,7 @@ IYAGI Layout 是一个 macOS 菜单栏常驻工具。按下 **⌥⌘ + 方向键
 
 | 平台 | 文件 | 大小 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.5_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg) | 9 MB | `ab984793d234fdb95d62d52d3303d1d440e59e0a91d6c29ad1809ce2badab55a` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.6_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.6/IYAGI.Layout_0.1.6_aarch64.dmg) | 9 MB | `68f07fa144d94cf56c24215080ac6fe2a6a6e91210fcbfee591da986f88b6ac0` |
 
 <details>
 <summary>macOS 签名与信任</summary>
@@ -209,6 +209,8 @@ cargo run -p layout-probe -- left --gap 8   # 试着贴合
 | [docs/media/intro/](docs/media/intro/) | 30 秒介绍视频的源码(`intro.html` + `render.mjs`，重新渲染：`node docs/media/intro/render.mjs`) |
 
 ## 状态与路线图
+
+v0.1.6 —— **更流畅的窗口贴合。** 贴合改为在后台线程执行，无响应的应用不会再卡住菜单栏;Chromium/Electron 窗口的动画判断加入缓存，速度更快。快捷键重复会在录制的瞬间提示，`CommandOrControl` 别名也无法绕过重复检查。日志保留 14 天后清理，隐藏的设置窗口停止轮询，日志级别和 Chromium 动画策略移入新的“高级”部分。DMG 在 [v0.1.6 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.6)。
 
 v0.1.5 —— **设置窗口高度适应内容。** 打开应用时底部按钮不再被截断。依赖已升级(React 19、Vite 8、TypeScript 7)，`npm audit` 无问题。内部锁被污染时改为恢复，不再 panic。DMG 在 [v0.1.5 发布页](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5)。
 

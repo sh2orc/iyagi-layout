@@ -44,7 +44,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 ## Download
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.6/IYAGI.Layout_0.1.6_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download IYAGI Layout for macOS (Apple Silicon)">
   </a>
   <br>
@@ -56,7 +56,7 @@ pure Rust crate; every macOS call sits behind a small, typed wrapper.
 
 | Platform | File | Size | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.5_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg) | 9 MB | `ab984793d234fdb95d62d52d3303d1d440e59e0a91d6c29ad1809ce2badab55a` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.6_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.6/IYAGI.Layout_0.1.6_aarch64.dmg) | 9 MB | `68f07fa144d94cf56c24215080ac6fe2a6a6e91210fcbfee591da986f88b6ac0` |
 
 <details>
 <summary>Signing & trust on macOS</summary>
@@ -230,6 +230,8 @@ builds the PNG/ICNS set and `scripts/build-icon-assets.sh` compiles the Icon Com
 | [docs/media/intro/](docs/media/intro/) | Source of the 30-second intro (`intro.html` + `render.mjs`; re-render with `node docs/media/intro/render.mjs`) |
 
 ## Status & Roadmap
+
+v0.1.6 — **Smoother, leaner snapping.** Snapping now runs on a background thread, so an unresponsive app can no longer freeze the menu bar, and Chromium/Electron windows snap faster (the animation check is cached). Duplicate shortcuts are flagged the moment you record them, `CommandOrControl` aliases no longer slip past duplicate validation, logs are pruned after 14 days, a hidden settings window stops polling, and log level and the Chromium animation policy moved into a new Advanced section. The DMG is on the [v0.1.6 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.6).
 
 v0.1.5 — **Settings window fits its content.** The bottom buttons no longer get cut off when the app opens. Dependencies are updated (React 19, Vite 8, TypeScript 7) and `npm audit` reports no issues. A poisoned internal lock now recovers instead of panicking. The DMG is on the [v0.1.5 release](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5).
 

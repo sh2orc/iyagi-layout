@@ -43,7 +43,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 ## 다운로드
 
 <p align="center">
-  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg">
+  <a href="https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.6/IYAGI.Layout_0.1.6_aarch64.dmg">
     <img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="IYAGI Layout macOS(Apple Silicon) 다운로드">
   </a>
   <br>
@@ -55,7 +55,7 @@ Terminal과 같은 서명·릴리스 흐름의 Tauri 2 + Rust 앱입니다. 창 
 
 | 플랫폼 | 파일 | 크기 | SHA-256 |
 |---|---|---|---|
-| macOS · Apple Silicon | [`IYAGI.Layout_0.1.5_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.5/IYAGI.Layout_0.1.5_aarch64.dmg) | 9 MB | `ab984793d234fdb95d62d52d3303d1d440e59e0a91d6c29ad1809ce2badab55a` |
+| macOS · Apple Silicon | [`IYAGI.Layout_0.1.6_aarch64.dmg`](https://github.com/sh2orc/iyagi-layout/releases/download/v0.1.6/IYAGI.Layout_0.1.6_aarch64.dmg) | 9 MB | `68f07fa144d94cf56c24215080ac6fe2a6a6e91210fcbfee591da986f88b6ac0` |
 
 <details>
 <summary>macOS 서명과 신뢰</summary>
@@ -222,6 +222,8 @@ PNG/ICNS 세트를 만들고 `scripts/build-icon-assets.sh`가 Icon Composer 에
 | [docs/media/intro/](docs/media/intro/) | 30초 소개 영상 소스(`intro.html` + `render.mjs`, 다시 만들기: `node docs/media/intro/render.mjs`) |
 
 ## 상태와 로드맵
+
+v0.1.6 — **더 부드러워진 스냅.** 스냅을 백그라운드 스레드에서 실행해 응답 없는 앱이 메뉴 막대를 멈추지 못하게 했고, Chromium/Electron 창은 애니메이션 판단을 캐시해 더 빨라졌습니다. 중복 단축키는 녹음하는 순간 표시되고 `CommandOrControl` 별칭도 중복 검사를 우회하지 못합니다. 로그는 14일이 지나면 정리되고, 숨겨진 설정 창은 폴링을 멈추며, 로그 수준과 Chromium 애니메이션 정책이 새 '고급' 섹션으로 옮겨졌습니다. DMG는 [v0.1.6 릴리스](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.6)에 있습니다.
 
 v0.1.5 — **설정 창 높이를 내용에 맞춤.** 앱을 열었을 때 하단 버튼이 잘리지 않도록 설정 창 높이를 내용에 맞춥니다. 의존성을 최신으로 올렸습니다(React 19, Vite 8, TypeScript 7). `npm audit`은 취약점이 없습니다. 잠금이 오염돼도 패닉하지 않고 복구합니다. DMG는 [v0.1.5 릴리스](https://github.com/sh2orc/iyagi-layout/releases/tag/v0.1.5)에 있습니다.
 
