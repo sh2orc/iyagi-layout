@@ -221,18 +221,26 @@ iyagi-layout/
 
 ### 5-3. 한 키 입력의 흐름
 
+2026-10-27 변경: 스냅 실행을 워커 스레드로 옮겼다. AX 호출은 응답 없는 앱을 만나면
+하나당 0.5초까지 기다릴 수 있어 메인 루프에서 돌면 트레이·설정 창이 멈췄다. 이제
+메인 스레드(핫키 핸들러)는 메인 스레드 전용 값(NSScreen 화면 목록, NSWorkspace
+최전면 앱)만 모아 스냅샷으로 넘기고, 나머지는 워커가 처리한다. 스냅은 한 번에
+하나만 실행한다(직렬화 락) — 예전 메인 스레드 동기 실행과 같은 규칙.
+
 ```text
 Ctrl+Cmd+← 누름
-  → Carbon 핫키 → global-hotkey → plugin 핸들러(메인 스레드, Pressed)
-  → actions::run(Action::Left)
-      1. layout_macos::permission::is_trusted()  없으면 → 안내(실행당 1회) + 트레이 상태 갱신, 끝
-      2. layout_macos::window::focused()          없으면 → 로그, 끝
+  → Carbon 핫키 핸들러(메인 스레드)
+  → actions::run(Action::Left) → 스냅샷 수집(screens + 최전면 앱) → 워커 스레드 기동
+  워커:
+      1. layout_macos::permission::is_trusted()  없으면 → 안내(실행당 1회, 메인으로 위임) + 트레이 갱신, 끝
+      2. layout_macos::window::focused_with_frontmost(스냅샷 PID)  없으면 → 150ms 재시도(최대 1.5초, 재시도마다 메인에서 스냅샷 갱신) → 로그, 끝
       3. frame = window.frame(); fullscreen이면 끝; resizable 여부 확인
-      4. screens = layout_macos::screens::list()  (CG 좌표)
+      4. screens = 스냅샷(메인 스레드에서 수집, CG 좌표)
       5. screen = layout_core::pick_screen(frame, &screens)
-      6. target = layout_core::compute_target(Left, screen.visible, frame, settings.gap, cycle_state)
+      6. target = layout_core::compute_target / compute_chained (cycle_state)
       7. window.set_frame(target)   (enhancedUI 처리 → 크기 → 위치 → 크기 → 재읽기 → 보정)
       8. cycle_state.record(Left, target); tracing::info!(app = bundle_id, from = ?frame, to = ?target)
+         실패 알림(트레이 플래시·상태 줄)은 메인 스레드로 위임해 갱신한다.
 ```
 
 ## 6. 동작 명세 (MVP)
