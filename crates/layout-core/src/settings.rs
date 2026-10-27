@@ -155,15 +155,17 @@ pub fn check_shortcut_shape(spec: &str) -> Result<(), String> {
 }
 
 /// 비교용 정규화: 대소문자·공백 무시, 별칭 통일(Ctrl=Control, Cmd=Super, Option=Alt,
-/// Left=ArrowLeft …), 수정키 순서 무시. 같은 조합을 다르게 적어도 중복으로 잡는다.
+/// Left=ArrowLeft …), 수정키 순서·반복 무시. 같은 조합을 다르게 적어도 중복으로 잡는다.
+/// CommandOrControl 계열도 Super로 통일한다 — 이 앱은 macOS 전용이라
+/// CommandOrControl는 곧 Command다. 그대로 두면 `Cmd+Left`와 `CommandOrControl+Left`가
+/// 다른 조합으로 보여 저장 시 중복 검사를 통과한 뒤 Carbon 등록에서 실패한다.
 pub fn normalize_shortcut(spec: &str) -> String {
     fn canonical(token: &str) -> String {
         let upper = token.trim().to_ascii_uppercase();
         match upper.as_str() {
             "CTRL" => "CONTROL".into(),
-            "CMD" | "COMMAND" => "SUPER".into(),
+            "CMD" | "COMMAND" | "COMMANDORCONTROL" | "CMDORCTRL" | "CMDORCONTROL" => "SUPER".into(),
             "OPTION" => "ALT".into(),
-            "COMMANDORCTRL" | "CMDORCTRL" | "CMDORCONTROL" => "COMMANDORCONTROL".into(),
             "LEFT" => "ARROWLEFT".into(),
             "RIGHT" => "ARROWRIGHT".into(),
             "UP" => "ARROWUP".into(),
@@ -179,6 +181,7 @@ pub fn normalize_shortcut(spec: &str) -> String {
     };
     let mut mods: Vec<&String> = mods.iter().collect();
     mods.sort();
+    mods.dedup();
     mods.into_iter()
         .map(String::as_str)
         .chain(std::iter::once(key.as_str()))
@@ -282,6 +285,16 @@ mod tests {
         assert_ne!(
             normalize_shortcut("Control+Super+ArrowLeft"),
             normalize_shortcut("Control+Alt+ArrowLeft")
+        );
+        // CommandOrControl는 macOS에서 Command(=Super)와 같은 키다.
+        assert_eq!(
+            normalize_shortcut("CommandOrControl+ArrowLeft"),
+            normalize_shortcut("Cmd+Left")
+        );
+        // 같은 수정키를 두 번 적어도 한 번과 같은 조합이다.
+        assert_eq!(
+            normalize_shortcut("Control+Ctrl+ArrowLeft"),
+            normalize_shortcut("Control+ArrowLeft")
         );
     }
 
