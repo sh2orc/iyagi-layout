@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  appInfo, fitSettingsHeight, hideSettings, loginItemSet, onSettingsChanged, openAccessibilitySettings, openLogDir, openLoginItemsSettings,
+  appInfo, fitSettingsHeight, hideSettings, loginItemSet, onSettingsChanged, onSettingsVisibility, openAccessibilitySettings, openLogDir, openLoginItemsSettings,
   permissionPrompt, settingsGet, settingsSet, statusGet,
   type ActionKey, type AppInfo, type Settings, type Status,
 } from "./api";
 import { ShortcutRecorder } from "./ShortcutRecorder";
+import { normalizeShortcut } from "./shortcut";
 import { makeT, systemLang, type Key, type Lang } from "./i18n";
 
 const ACTIONS: Array<{ key: ActionKey; label: Key }> = [
@@ -30,6 +31,8 @@ export function App() {
   const [info, setInfo] = useState<AppInfo | null>(null);
   // 처음에는 웹뷰 언어로 그리고, 앱이 알려 주는 시스템 언어(메뉴 막대와 같은 값)로 맞춘다.
   const [lang, setLang] = useState<Lang>(systemLang());
+  // 창이 숨겨진 동안엔 폴링을 쉰다(Rust가 보임/숨김 이벤트를 보내 준다).
+  const [visible, setVisible] = useState(true);
   const t = makeT(lang);
 
   const refreshStatus = useCallback(() => statusGet().then(setStatus), []);
@@ -66,22 +69,49 @@ export function App() {
       setLang(i.lang);
     });
     void refreshStatus();
-    // 권한은 시스템 설정에서 바뀌므로 창이 보이는 동안 주기적으로 다시 읽는다.
-    const timer = window.setInterval(() => void refreshStatus(), 2000);
     const unlisten = onSettingsChanged((s) => {
       setSaved(s);
       setDraft(s);
       void refreshStatus();
     });
+    const unlistenVisibility = onSettingsVisibility((v) => {
+      setVisible(v);
+      if (v) void refreshStatus();
+    });
     return () => {
-      window.clearInterval(timer);
       void unlisten.then((f) => f());
+      void unlistenVisibility.then((f) => f());
     };
   }, [refreshStatus]);
+
+  // 권한은 시스템 설정에서 바뀌므로 창이 보이는 동안만 주기적으로 다시 읽는다.
+  // 숨겨진 동안에도 타이머가 돌면 SMAppService 조회(XPC)가 계속 일어나 상주 앱이 잠도 못 잔다.
+  useEffect(() => {
+    if (!visible) return;
+    const timer = window.setInterval(() => void refreshStatus(), 2000);
+    return () => window.clearInterval(timer);
+  }, [visible, refreshStatus]);
 
   if (!draft) return <main className="page" ref={pageRef}>{t("loading")}</main>;
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
+
+  // 다른 동작과 같은 조합이면 저장 전에 바로 보여 준다(백엔드 검증과 같은 정규화 규칙).
+  const duplicated: Partial<Record<ActionKey, boolean>> = {};
+  {
+    const seen = new Map<string, ActionKey>();
+    for (const { key } of ACTIONS) {
+      const norm = normalizeShortcut(draft.shortcuts[key]);
+      if (!norm) continue;
+      const prev = seen.get(norm);
+      if (prev) {
+        duplicated[prev] = true;
+        duplicated[key] = true;
+      } else {
+        seen.set(norm, key);
+      }
+    }
+  }
 
   const save = async () => {
     setSaveError(null);
@@ -149,6 +179,7 @@ export function App() {
               t={t}
               value={draft.shortcuts[key]}
               onChange={(next) => setDraft({ ...draft, shortcuts: { ...draft.shortcuts, [key]: next } })}
+              error={duplicated[key] ? t("duplicateShortcut") : null}
             />
           </div>
         ))}

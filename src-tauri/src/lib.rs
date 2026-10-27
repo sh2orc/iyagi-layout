@@ -79,10 +79,15 @@ pub fn run() {
             Ok(())
         })
         .on_window_event(|window, event| {
-            // 설정 창 닫기 = 숨기기. 앱은 메뉴 막대에 남는다.
+            // 설정 창 닫기 = 숨기기. 앱은 메뉴 막대에 남는다. hide_settings를 거치면
+            // 빨간 닫기 버튼으로 숨길 때도 웹뷰에 보임/숨김 이벤트가 간다.
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 api.prevent_close();
-                let _ = window.hide();
+                if window.label() == window::SETTINGS_LABEL {
+                    window::hide_settings(window.app_handle().clone());
+                } else {
+                    let _ = window.hide();
+                }
             }
         })
         .build(tauri::generate_context!())

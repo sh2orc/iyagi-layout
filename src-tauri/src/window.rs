@@ -1,15 +1,23 @@
 //! 설정 창(label `settings`): 트레이 "설정…"에서 지연 생성, 닫으면 숨김.
 
 use serde::Serialize;
-use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
+use tauri::{AppHandle, Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_opener::OpenerExt;
 
 pub const SETTINGS_LABEL: &str = "settings";
+/// 설정 창의 보임/숨김을 알리는 이벤트(payload: bool). 창이 숨겨진 동안엔 설정 창의
+/// 상태 폴링(권한·로그인 항목)을 멈추게 하려고 웹뷰로 보낸다.
+pub const SETTINGS_VISIBILITY_EVENT: &str = "iyagi-layout://settings-visibility";
+
+fn emit_visibility(app: &AppHandle, visible: bool) {
+    let _ = app.emit(SETTINGS_VISIBILITY_EVENT, visible);
+}
 
 pub fn show_settings(app: &AppHandle) {
     if let Some(window) = app.get_webview_window(SETTINGS_LABEL) {
         let _ = window.show();
         let _ = window.set_focus();
+        emit_visibility(app, true);
         return;
     }
     let built = WebviewWindowBuilder::new(app, SETTINGS_LABEL, WebviewUrl::default())
@@ -21,6 +29,9 @@ pub fn show_settings(app: &AppHandle) {
     match built {
         Ok(window) => {
             let _ = window.set_focus();
+            // 새로 만든 창은 웹뷰가 아직 리스너를 달기 전이라 이 이벤트는 놓치지만,
+            // 웹뷰의 기본값이 '보임'이라 문제 없다.
+            emit_visibility(app, true);
         }
         Err(error) => tracing::error!(%error, "cannot create the settings window"),
     }
@@ -93,6 +104,7 @@ pub fn hide_settings(app: AppHandle) {
     if let Some(window) = app.get_webview_window(SETTINGS_LABEL) {
         let _ = window.hide();
     }
+    emit_visibility(&app, false);
     tracing::info!("settings window hidden — the app stays in the menu bar");
 }
 

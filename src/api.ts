@@ -56,3 +56,7 @@ export const shortcutValidate = (spec: string) => invoke<string>("shortcut_valid
 
 export const onSettingsChanged = (handler: (s: Settings) => void): Promise<UnlistenFn> =>
   listen<Settings>("iyagi-layout://settings-changed", (e) => handler(e.payload));
+
+/** 설정 창의 보임/숨김(Rust가 보내준다). 숨겨진 동안엔 상태 폴링을 쉰다. */
+export const onSettingsVisibility = (handler: (visible: boolean) => void): Promise<UnlistenFn> =>
+  listen<boolean>("iyagi-layout://settings-visibility", (e) => handler(e.payload));

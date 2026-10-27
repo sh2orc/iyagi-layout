@@ -39,5 +39,3 @@ section.attention { border-color: #e0a800; }
 .recorder button.recording { border-color: var(--accent); color: var(--accent); }
 .field-error { color: var(--danger); font-size: 11px; max-width: 260px; }
 section p { margin: 4px 0 8px; line-height: 1.5; }
-button.danger { background: #d92d20; color: #fff; border-color: transparent; }
-button.danger:hover { background: #b42318; }
